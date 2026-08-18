@@ -18,6 +18,38 @@ if ( ! defined( 'ABSPATH' ) ) { exit; }
 
 <div class="tw-mega-overlay" id="tw-mega-overlay"></div>
 <div class="tw-navdock">
+	<div class="tw-utilbar"><div class="tw-utilrow">
+        <?php
+        $cta_on = get_theme_mod( 'trekways_cta_enable', true );
+			if ( $cta_on ) :
+				$cta_label = get_theme_mod( 'trekways_cta_label', 'Need help? Call us' );
+				$np_num  = get_theme_mod( 'trekways_cta_np_number', '+977 9841666232' );
+				$np_name = get_theme_mod( 'trekways_cta_np_name', '' );
+				$np_flag = get_theme_mod( 'trekways_cta_np_flag', TREKWAYS_URI . '/images/flags/np.svg' );
+				$us_num  = get_theme_mod( 'trekways_cta_us_number', '+1-651-703-8181' );
+				$us_name = get_theme_mod( 'trekways_cta_us_name', '' );
+				$us_flag = get_theme_mod( 'trekways_cta_us_flag', TREKWAYS_URI . '/images/flags/us.svg' );
+				if ( $np_num || $us_num ) :
+			?>
+			<div class="tw-wa">
+				<?php if ( $cta_label ) : ?><span class="tw-wa__lbl"><?php echo esc_html( $cta_label ); ?></span><?php endif; ?>
+				<div class="tw-wa__nums">
+				<?php if ( $np_num ) : ?>
+				<a class="tw-wa__row" href="tel:<?php echo esc_attr( preg_replace( '/[^0-9+]/', '', $np_num ) ); ?>">
+					<img class="tw-wa__flag" src="<?php echo esc_url( $np_flag ); ?>" alt="Nepal">
+					<span><?php echo esc_html( $np_num ); ?><?php if ( $np_name ) : ?> <b>(<?php echo esc_html( $np_name ); ?>)</b><?php endif; ?></span>
+				</a>
+				<?php endif; ?>
+				<?php if ( $us_num ) : ?>
+				<a class="tw-wa__row" href="tel:<?php echo esc_attr( preg_replace( '/[^0-9+]/', '', $us_num ) ); ?>">
+					<img class="tw-wa__flag" src="<?php echo esc_url( $us_flag ); ?>" alt="USA">
+					<span><?php echo esc_html( $us_num ); ?><?php if ( $us_name ) : ?> <b>(<?php echo esc_html( $us_name ); ?>)</b><?php endif; ?></span>
+				</a>
+				<?php endif; ?>
+				</div>
+			</div>
+            <?php endif; endif; ?>
+    </div></div>
 	<nav class="tw-nav" aria-label="<?php esc_attr_e( 'Primary', 'trekways' ); ?>">
 
 		<?php
@@ -55,38 +87,6 @@ if ( ! defined( 'ABSPATH' ) ) { exit; }
 				echo '<li><a href="#">Contact</a></li>';
 				echo '</ul>';
 			}
-
-			$cta_on = get_theme_mod( 'trekways_cta_enable', true );
-			if ( $cta_on ) :
-				$cta_label = get_theme_mod( 'trekways_cta_label', 'Need help? Call us' );
-				$np_num  = get_theme_mod( 'trekways_cta_np_number', '+977 9841666232' );
-				$np_name = get_theme_mod( 'trekways_cta_np_name', '' );
-				$np_flag = get_theme_mod( 'trekways_cta_np_flag', TREKWAYS_URI . '/images/flags/np.svg' );
-				$us_num  = get_theme_mod( 'trekways_cta_us_number', '+1-651-703-8181' );
-				$us_name = get_theme_mod( 'trekways_cta_us_name', '' );
-				$us_flag = get_theme_mod( 'trekways_cta_us_flag', TREKWAYS_URI . '/images/flags/us.svg' );
-				if ( $np_num || $us_num ) :
-			?>
-			<div class="tw-wa">
-				<?php if ( $cta_label ) : ?><span class="tw-wa__lbl"><?php echo esc_html( $cta_label ); ?></span><?php endif; ?>
-				<div class="tw-wa__nums">
-				<?php if ( $np_num ) : ?>
-				<a class="tw-wa__row" href="tel:<?php echo esc_attr( preg_replace( '/[^0-9+]/', '', $np_num ) ); ?>">
-					<img class="tw-wa__flag" src="<?php echo esc_url( $np_flag ); ?>" alt="Nepal">
-					<span><?php echo esc_html( $np_num ); ?><?php if ( $np_name ) : ?> <b>(<?php echo esc_html( $np_name ); ?>)</b><?php endif; ?></span>
-				</a>
-				<?php endif; ?>
-				<?php if ( $us_num ) : ?>
-				<a class="tw-wa__row" href="tel:<?php echo esc_attr( preg_replace( '/[^0-9+]/', '', $us_num ) ); ?>">
-					<img class="tw-wa__flag" src="<?php echo esc_url( $us_flag ); ?>" alt="USA">
-					<span><?php echo esc_html( $us_num ); ?><?php if ( $us_name ) : ?> <b>(<?php echo esc_html( $us_name ); ?>)</b><?php endif; ?></span>
-				</a>
-				<?php endif; ?>
-				</div>
-			</div>
-			<?php endif; endif; ?>
-
-			<?php
 			$pay_on = get_theme_mod( 'trekways_pay_enable', true );
 			$pay_url = get_theme_mod( 'trekways_pay_url', '' );
 			$pay_imgs = array();
