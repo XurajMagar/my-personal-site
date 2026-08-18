@@ -43,7 +43,6 @@ if ( ! defined( 'ABSPATH' ) ) { exit; }
 				<?php endif; ?>
 				<span class="tw-brand__name"><?php echo esc_html( get_bloginfo( 'name' ) ); ?></span>
 			</span>
-			<span class="tw-brand__sub"><?php esc_html_e( 'NEPAL', 'trekways' ); ?></span>
 		</a>
 
 		<div class="tw-rside">
@@ -86,6 +85,27 @@ if ( ! defined( 'ABSPATH' ) ) { exit; }
 				</div>
 			</div>
 			<?php endif; endif; ?>
+
+			<?php
+			$pay_on = get_theme_mod( 'trekways_pay_enable', true );
+			$pay_url = get_theme_mod( 'trekways_pay_url', '' );
+			$pay_imgs = array();
+			for ( $p = 1; $p <= 6; $p++ ) {
+				$img = get_theme_mod( "trekways_pay_{$p}", '' );
+				if ( $img ) { $pay_imgs[] = $img; }
+			}
+			if ( $pay_on && $pay_imgs ) :
+			?>
+			<div class="tw-pays">
+				<?php foreach ( $pay_imgs as $img ) : ?>
+					<?php if ( $pay_url ) : ?>
+						<a href="<?php echo esc_url( $pay_url ); ?>" target="_blank" rel="noopener nofollow"><img class="tw-pay" src="<?php echo esc_url( $img ); ?>" alt=""></a>
+					<?php else : ?>
+						<img class="tw-pay" src="<?php echo esc_url( $img ); ?>" alt="">
+					<?php endif; ?>
+				<?php endforeach; ?>
+			</div>
+			<?php endif; ?>
 		</div>
 
 		<button class="tw-burger" aria-label="<?php esc_attr_e( 'Toggle menu', 'trekways' ); ?>" aria-expanded="false"><i class="fa-solid fa-bars"></i></button>

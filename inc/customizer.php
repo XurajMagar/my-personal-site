@@ -45,6 +45,19 @@ function trekways_customize_register( $wp_customize ) {
 	$wp_customize->add_setting( 'trekways_cta_us_flag', array( 'sanitize_callback' => 'esc_url_raw' ) );
 	$wp_customize->add_control( new WP_Customize_Image_Control( $wp_customize, 'trekways_cta_us_flag_ctrl', array( 'label' => __( 'USA flag (optional — overrides default)', 'trekways' ), 'section' => 'trekways_cta', 'settings' => 'trekways_cta_us_flag' ) ) );
 
+	/* Payment / security badges */
+	$wp_customize->add_setting( 'trekways_pay_enable', array( 'default' => true, 'sanitize_callback' => 'wp_validate_boolean' ) );
+	$wp_customize->add_control( 'trekways_pay_enable_ctrl', array( 'label' => __( 'Show payment/security badges', 'trekways' ), 'section' => 'trekways_cta', 'settings' => 'trekways_pay_enable', 'type' => 'checkbox' ) );
+	$wp_customize->add_setting( 'trekways_pay_url', array( 'default' => '', 'sanitize_callback' => 'esc_url_raw' ) );
+	$wp_customize->add_control( 'trekways_pay_url_ctrl', array( 'label' => __( 'Badges link URL (optional)', 'trekways' ), 'section' => 'trekways_cta', 'settings' => 'trekways_pay_url', 'type' => 'url' ) );
+	for ( $p = 1; $p <= 6; $p++ ) {
+		$wp_customize->add_setting( "trekways_pay_{$p}", array( 'sanitize_callback' => 'esc_url_raw' ) );
+		$wp_customize->add_control( new WP_Customize_Image_Control( $wp_customize, "trekways_pay_{$p}_ctrl", array(
+			'label' => sprintf( __( 'Badge %d (Visa, Mastercard, Sectigo…)', 'trekways' ), $p ),
+			'section' => 'trekways_cta', 'settings' => "trekways_pay_{$p}",
+		) ) );
+	}
+
 
 	$wp_customize->add_section( 'trekways_hero_section', array(
 		'title'    => __( 'Hero Banner', 'trekways' ),
