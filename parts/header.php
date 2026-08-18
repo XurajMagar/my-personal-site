@@ -49,6 +49,19 @@ if ( ! defined( 'ABSPATH' ) ) { exit; }
 				</div>
 			</div>
             <?php endif; endif; ?>
+			<?php
+			$pay_on  = get_theme_mod( 'trekways_pay_enable', true );
+			$pay_img = get_theme_mod( 'trekways_pay_1', '' );
+			$pay_url = get_theme_mod( 'trekways_pay_url', '' );
+			$pay_lbl = get_theme_mod( 'trekways_pay_label', 'Online Payment' );
+			if ( $pay_on && $pay_img ) : ?>
+			<div class="tw-pays">
+				<?php if ( $pay_lbl ) : ?><span class="tw-pays__lbl"><?php echo esc_html( $pay_lbl ); ?></span><?php endif; ?>
+				<?php if ( $pay_url ) : ?><a href="<?php echo esc_url( $pay_url ); ?>" target="_blank" rel="noopener nofollow"><?php endif; ?>
+				<img class="tw-pay" src="<?php echo esc_url( $pay_img ); ?>" alt="">
+				<?php if ( $pay_url ) : ?></a><?php endif; ?>
+			</div>
+			<?php endif; ?>
     </div></div>
 	<nav class="tw-nav" aria-label="<?php esc_attr_e( 'Primary', 'trekways' ); ?>">
 
@@ -87,25 +100,7 @@ if ( ! defined( 'ABSPATH' ) ) { exit; }
 				echo '<li><a href="#">Contact</a></li>';
 				echo '</ul>';
 			}
-			$pay_on = get_theme_mod( 'trekways_pay_enable', true );
-			$pay_url = get_theme_mod( 'trekways_pay_url', '' );
-			$pay_imgs = array();
-			for ( $p = 1; $p <= 6; $p++ ) {
-				$img = get_theme_mod( "trekways_pay_{$p}", '' );
-				if ( $img ) { $pay_imgs[] = $img; }
-			}
-			if ( $pay_on && $pay_imgs ) :
 			?>
-			<div class="tw-pays">
-				<?php foreach ( $pay_imgs as $img ) : ?>
-					<?php if ( $pay_url ) : ?>
-						<a href="<?php echo esc_url( $pay_url ); ?>" target="_blank" rel="noopener nofollow"><img class="tw-pay" src="<?php echo esc_url( $img ); ?>" alt=""></a>
-					<?php else : ?>
-						<img class="tw-pay" src="<?php echo esc_url( $img ); ?>" alt="">
-					<?php endif; ?>
-				<?php endforeach; ?>
-			</div>
-			<?php endif; ?>
 		</div>
 
 		<button class="tw-burger" aria-label="<?php esc_attr_e( 'Toggle menu', 'trekways' ); ?>" aria-expanded="false"><i class="fa-solid fa-bars"></i></button>

@@ -1694,3 +1694,126 @@ h4 {
         display: none
     }
 }
+
+.tw-pays {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    flex-shrink: 0
+}
+
+.tw-pays__lbl {
+    font-size: 10.5px;
+    color: var(--tw-ice);
+    white-space: nowrap
+}
+
+.tw-pay {
+    height: 20px;
+    width: auto;
+    display: block;
+    border-radius: 3px
+}
+
+.tw-navdock.tw-scrolled .tw-utilbar {
+    background: rgba(30, 15, 66, .94);
+    backdrop-filter: blur(12px) saturate(140%)
+}
+
+@media (max-width:1100px) {
+    .tw-pays {
+        display: none
+    }
+}
+
+@media (min-width: 1600px) {
+    .tw-nav,
+    .tw-utilbar {
+        width: min(1440px, 100%)
+    }
+    .tw-wing a,
+    .tw-rside .tw-wing a {
+        font-size: 15px
+    }
+    .tw-brand__name {
+        font-size: 22px
+    }
+}
+
+@media (min-width: 1920px) {
+    .tw-nav,
+    .tw-utilbar {
+        width: min(1680px, 100%)
+    }
+    .tw-wing a,
+    .tw-rside .tw-wing a {
+        font-size: 16px
+    }
+    .tw-brand__name {
+        font-size: 24px
+    }
+}
+
+@media (max-width:1100px) {
+    .tw-utilbar {
+        display: none !important
+    }
+    .tw-navdock:hover .tw-utilbar,
+    .tw-navdock:focus-within .tw-utilbar,
+    .tw-navdock.tw-menu-open .tw-utilbar {
+        display: none !important
+    }
+    .tw-pays {
+        display: none !important
+    }
+    .tw-nav.tw-open .tw-utilbar {
+        display: block !important;
+        max-height: none;
+        opacity: 1;
+        width: 100%;
+        background: transparent;
+        order: 6;
+        flex-basis: 100%
+    }
+    .tw-nav.tw-open .tw-utilrow {
+        flex-direction: column;
+        align-items: stretch;
+        gap: 10px;
+        padding: 12px 0 0;
+        border-top: 1px solid rgba(255, 255, 255, .14)
+    }
+    .tw-nav.tw-open .tw-pays {
+        display: flex !important;
+        justify-content: center;
+        order: 2
+    }
+    .tw-nav.tw-open .tw-wa {
+        display: flex;
+        flex-direction: column;
+        align-items: stretch;
+        gap: 8px;
+        background: transparent;
+        border: 0;
+        padding: 0;
+        opacity: 1;
+        transform: none;
+        pointer-events: auto;
+        order: 1
+    }
+    .tw-nav.tw-open .tw-wa__nums {
+        flex-direction: column;
+        gap: 8px
+    }
+    .tw-nav.tw-open .tw-wa__row {
+        background: rgba(255, 255, 255, .06);
+        border: 1px solid rgba(255, 255, 255, .14);
+        border-radius: 10px;
+        padding: 11px 12px;
+        font-size: 14px
+    }
+    .tw-nav.tw-open .tw-wa__row+.tw-wa__row {
+        border-left: 0;
+        padding-left: 12px;
+        margin-left: 0
+    }
+}
