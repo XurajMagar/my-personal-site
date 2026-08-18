@@ -76,7 +76,9 @@ function trekways_customize_register( $wp_customize ) {
 		'label' => __( 'Mobile video', 'trekways' ), 'description' => __( 'Screens < 1024px. Empty = poster on mobile.', 'trekways' ),
 		'section' => 'trekways_hero_section', 'settings' => 'trekways_hero_video_mobile', 'mime_type' => 'video',
 	) ) );
-
+	/* Cloud divider */
+	$wp_customize->add_setting( 'trekways_clouds_enable', array( 'default' => true, 'sanitize_callback' => 'wp_validate_boolean' ) );
+	$wp_customize->add_control( 'trekways_clouds_enable_ctrl', array( 'label' => __( 'Show cloud divider below hero', 'trekways' ), 'section' => 'trekways_hero_section', 'settings' => 'trekways_clouds_enable', 'type' => 'checkbox' ) );
 	/* Awards */
 	$wp_customize->add_setting( 'trekways_awards_label', array( 'default' => 'Award-winning', 'sanitize_callback' => 'sanitize_text_field' ) );
 	$wp_customize->add_control( 'trekways_awards_label_ctrl', array(

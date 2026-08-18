@@ -77,4 +77,24 @@ function trekways_award_slot( $i, $extra_class = '' ) {
 			</div>
 		</div>
 	</div>
+    <?php if ( get_theme_mod( 'trekways_clouds_enable', true ) ) : ?>
+	<div class="tw-clouddiv" aria-hidden="true">
+		<?php
+		$tw_cloud_cfg = array(
+			array( 1, '-1.2s',  -1, '.45' ), array( 2, '-3.6s',  1, '.50' ),
+			array( 3, '-6s',    -1, '.42' ), array( 4, '-8.4s',  1, '.48' ),
+			array( 5, '-10.8s', -1, '.46' ), array( 2, '-13.2s', 1, '.44' ),
+			array( 3, '-15.6s', -1, '.50' ), array( 5, '-18s',   1, '.43' ),
+			array( 1, '-20.4s', -1, '.47' ), array( 4, '-22.8s', 1, '.45' ),
+		);
+		foreach ( $tw_cloud_cfg as $c ) {
+			printf(
+				'<img class="tw-cloud" src="%s" alt="" loading="lazy" decoding="async" style="--d:%s;--dir:%d;--s0:%s">',
+				esc_url( TREKWAYS_URI . '/images/clouds/cloud' . $c[0] . '.webp' ),
+				esc_attr( $c[1] ), (int) $c[2], esc_attr( $c[3] )
+			);
+		}
+		?>
+	</div>
+	<?php endif; ?>
 </section>
