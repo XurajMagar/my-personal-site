@@ -1921,7 +1921,8 @@ h4 {
 
 .tw-clouddiv::after {
     bottom: -2px;
-    height: calc(clamp(70px, 11vw, 150px) + 2px)
+    height: clamp(70px, 11vw, 150px);
+    background: linear-gradient(180deg, rgba(255, 255, 255, 0) 0%, rgba(255, 255, 255, .25) 35%, rgba(255, 255, 255, .7) 65%, rgba(255, 255, 255, .95) 85%, #fff 100%)
 }
 
 
@@ -1933,7 +1934,7 @@ h4 {
     --gap: clamp(105px, 13vw, 330px);
     position: relative;
     overflow: hidden;
-    background: radial-gradient(120% 80% at 50% 44%, rgba(139, 111, 232, .34) 0%, rgba(47, 25, 95, .55) 38%, rgba(14, 7, 32, 0) 72%), linear-gradient(180deg, #140a2c 0%, #0d0720 45%, #140a2c 100%);
+    background: radial-gradient(120% 70% at 50% 62%, rgba(139, 111, 232, .30) 0%, rgba(47, 25, 95, .45) 40%, rgba(14, 7, 32, 0) 75%), linear-gradient(180deg, #ffffff 0%, #e4dcf2 6%, #a892d0 14%, #6b4fa8 26%, #2f195f 44%, #0d0720 70%, #140a2c 100%);
     padding: clamp(46px, 5vw, 80px) 0 clamp(52px, 5.5vw, 88px)
 }
 
@@ -1960,7 +1961,7 @@ h4 {
 }
 
 .tw-trips__eyebrow {
-    color: var(--tw-sunrise);
+    color: #2F195F;
     font-size: 12px;
     letter-spacing: .2em;
     text-transform: uppercase;
@@ -1979,7 +1980,8 @@ h4 {
     color: var(--tw-ice);
     font-size: clamp(14px, 1.1vw, 17px);
     max-width: 560px;
-    margin: 0 auto
+    margin: 0 auto;
+    text-shadow: 0 2px 14px rgba(20, 10, 44, .55);
 }
 
 .tw-trips__empty {
@@ -2308,5 +2310,526 @@ h4 {
     .tw-cloud-top {
         animation: none;
         opacity: .18
+    }
+}
+
+p.tw-trips__eyebrow {
+    color: #2F195F;
+}
+
+
+/* ============ Associations + Awards marquee ============ */
+
+.tw-logos {
+    background: #fff;
+    padding: clamp(26px, 3vw, 40px) 0;
+    border-bottom: 1px solid #f0edf7
+}
+
+.tw-logos__row {
+    display: flex;
+    align-items: center;
+    gap: clamp(14px, 2vw, 28px);
+    max-width: 1440px;
+    margin: 0 auto;
+    padding: 0 clamp(16px, 3vw, 40px)
+}
+
+.tw-logos__row+.tw-logos__row {
+    margin-top: clamp(14px, 1.6vw, 22px)
+}
+
+.tw-logos__label {
+    flex: none;
+    width: clamp(120px, 12vw, 170px);
+    font-family: var(--tw-font-display);
+    font-weight: 800;
+    color: #8a8499;
+    font-size: clamp(13px, 1.1vw, 16px);
+    line-height: 1.2
+}
+
+.tw-logos__label small {
+    display: block;
+    font-family: var(--tw-font-body);
+    font-weight: 800;
+    color: #a9a4b6;
+    font-size: 10px;
+    letter-spacing: .16em;
+    text-transform: uppercase;
+    margin-bottom: 3px
+}
+
+.tw-marquee {
+    flex: 1;
+    min-width: 0;
+    overflow: hidden;
+    -webkit-mask-image: linear-gradient(90deg, transparent, #000 8%, #000 92%, transparent);
+    mask-image: linear-gradient(90deg, transparent, #000 8%, #000 92%, transparent)
+}
+
+.tw-track {
+    display: flex;
+    width: max-content;
+    animation: tw-marq 38s linear infinite
+}
+
+.tw-track__dup {
+    display: flex
+}
+
+.tw-marquee--rev .tw-track {
+    animation-direction: reverse;
+    animation-duration: 32s
+}
+
+.tw-marquee:hover .tw-track {
+    animation-play-state: paused
+}
+
+@keyframes tw-marq {
+    from {
+        transform: translate3d(0, 0, 0)
+    }
+    to {
+        transform: translate3d(-50%, 0, 0)
+    }
+}
+
+.tw-lg {
+    flex: none;
+    height: clamp(52px, 4.4vw, 64px);
+    margin-right: clamp(14px, 1.6vw, 22px);
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 0 18px;
+    border: 1px solid #ece9f5;
+    border-radius: 14px;
+    background: #fff;
+    color: var(--tw-brand);
+    text-decoration: none;
+    transition: border-color .3s, box-shadow .3s, transform .3s
+}
+
+.tw-lg:hover {
+    border-color: rgba(139, 111, 232, .4);
+    box-shadow: 0 8px 22px -14px rgba(47, 25, 95, .45);
+    transform: translateY(-2px)
+}
+
+.tw-lg img {
+    height: 70%;
+    width: auto;
+    max-width: 150px;
+    object-fit: contain;
+    display: block
+}
+
+.tw-lg span {
+    font-weight: 700;
+    font-size: 13px;
+    white-space: nowrap
+}
+
+@media(max-width:700px) {
+    .tw-logos__row {
+        flex-direction: column;
+        align-items: stretch;
+        gap: 10px
+    }
+    .tw-logos__label {
+        width: auto;
+        text-align: center
+    }
+}
+
+@media(prefers-reduced-motion:reduce) {
+    .tw-track {
+        animation: none
+    }
+}
+
+
+/* ============ Destinations showcase ============ */
+
+.tw-dest {
+    position: relative;
+    overflow: hidden;
+    background: #0d0720;
+    padding: 52px 0 44px
+}
+
+.tw-dbg {
+    position: absolute;
+    inset: 0;
+    background-size: cover;
+    background-position: center;
+    background-color: #140a2c;
+    transition: opacity 1.2s ease
+}
+
+.tw-dest__ov {
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(180deg, rgba(13, 7, 32, .84), rgba(13, 7, 32, .58) 42%, rgba(13, 7, 32, .9)), radial-gradient(70% 55% at 50% 50%, rgba(139, 111, 232, .26), transparent 70%)
+}
+
+.tw-dest__head {
+    position: relative;
+    z-index: 3;
+    text-align: center;
+    margin-bottom: 30px;
+    padding: 0 20px
+}
+
+.tw-dest__head small {
+    display: block;
+    color: var(--tw-sunrise);
+    font-size: 11px;
+    letter-spacing: .2em;
+    text-transform: uppercase;
+    font-weight: 800;
+    margin-bottom: 8px
+}
+
+.tw-dest__head h2 {
+    font-family: var(--tw-font-display);
+    color: #fff;
+    font-size: 38px
+}
+
+.tw-dstage {
+    position: relative;
+    z-index: 3;
+    width: min(1180px, 100%);
+    margin: 0 auto;
+    padding: 0 20px
+}
+
+.tw-dslide {
+    display: none;
+    grid-template-columns: 1fr 220px 1fr;
+    gap: 26px;
+    align-items: center
+}
+
+.tw-dslide.on {
+    display: grid
+}
+
+.tw-dside {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 12px;
+    transform-style: preserve-3d
+}
+
+.tw-dside--l {
+    transform: perspective(1500px) rotateY(28deg) scale(.9);
+    transform-origin: right center
+}
+
+.tw-dside--r {
+    transform: perspective(1500px) rotateY(-28deg) scale(.9);
+    transform-origin: left center
+}
+
+.tw-dcard {
+    position: relative;
+    z-index: 1;
+    display: block;
+    aspect-ratio: 4/3;
+    border-radius: 14px;
+    overflow: hidden;
+    text-decoration: none;
+    background-size: cover;
+    background-position: center;
+    box-shadow: 0 8px 20px -14px rgba(0, 0, 0, .7);
+    filter: brightness(.84);
+    transition: transform .45s cubic-bezier(.25, .8, .3, 1), filter .45s, box-shadow .45s
+}
+
+.tw-dside--l .tw-dcard:hover {
+    transform: rotateY(-28deg) translateZ(24px) scale(1.03)
+}
+
+.tw-dside--r .tw-dcard:hover {
+    transform: rotateY(28deg) translateZ(24px) scale(1.03)
+}
+
+.tw-dcard:hover {
+    filter: brightness(1.06);
+    z-index: 5;
+    box-shadow: 0 0 0 1px rgba(255, 255, 255, .28), 0 10px 26px -18px rgba(0, 0, 0, .6)
+}
+
+.tw-dcard__sc {
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(180deg, rgba(13, 7, 32, .05) 42%, rgba(13, 7, 32, .88))
+}
+
+.tw-dcard__t {
+    position: absolute;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    z-index: 2;
+    padding: 10px 12px;
+    color: #fff;
+    font-weight: 700;
+    font-size: 13px;
+    line-height: 1.25
+}
+
+.tw-dcard__t small {
+    display: block;
+    color: var(--tw-ice);
+    font-weight: 600;
+    font-size: 11px;
+    margin-top: 2px
+}
+
+.tw-dhero {
+    position: relative;
+    display: block;
+    aspect-ratio: 3/4;
+    border-radius: 18px;
+    overflow: hidden;
+    text-decoration: none;
+    background-size: cover;
+    background-position: center;
+    transition: transform .5s;
+    box-shadow: 0 34px 70px -26px rgba(0, 0, 0, .95), 0 0 0 1px rgba(255, 255, 255, .14), 0 0 70px -16px rgba(139, 111, 232, .6)
+}
+
+.tw-dhero:hover {
+    transform: translateY(-6px)
+}
+
+.tw-dhero__sc {
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(180deg, rgba(13, 7, 32, .1) 30%, rgba(13, 7, 32, .9))
+}
+
+.tw-dhero__b {
+    position: absolute;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    z-index: 2;
+    padding: 18px;
+    color: #fff;
+    text-align: center
+}
+
+.tw-dhero__b small {
+    display: block;
+    color: var(--tw-sunrise);
+    font-size: 10px;
+    letter-spacing: .2em;
+    text-transform: uppercase;
+    font-weight: 800
+}
+
+.tw-dhero__b strong {
+    display: block;
+    font-family: var(--tw-font-display);
+    font-size: 28px;
+    margin: 4px 0 2px
+}
+
+.tw-dhero__b em {
+    display: block;
+    font-style: normal;
+    color: var(--tw-ice);
+    font-size: 12px;
+    margin-bottom: 12px
+}
+
+.tw-dhero__go {
+    display: inline-block;
+    background: linear-gradient(180deg, var(--tw-sunrise), var(--tw-sunrise-deep));
+    color: #3a1c06;
+    font-weight: 800;
+    font-size: 13px;
+    padding: 10px 18px;
+    border-radius: 10px
+}
+
+.tw-dnav {
+    position: relative;
+    z-index: 3;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+    margin-top: 30px;
+    flex-wrap: wrap;
+    padding: 0 16px
+}
+
+.tw-dbtn {
+    width: 44px;
+    height: 44px;
+    border-radius: 50%;
+    display: grid;
+    place-items: center;
+    cursor: pointer;
+    color: #fff;
+    background: rgba(255, 255, 255, .1);
+    border: 1px solid rgba(255, 255, 255, .25);
+    transition: .3s
+}
+
+.tw-dbtn:hover {
+    background: rgba(255, 158, 69, .32);
+    border-color: rgba(255, 158, 69, .6)
+}
+
+.tw-ddot {
+    background: rgba(255, 255, 255, .07);
+    border: 1px solid rgba(255, 255, 255, .18);
+    color: var(--tw-ice);
+    font-family: var(--tw-font-body);
+    font-weight: 700;
+    font-size: 13px;
+    padding: 10px 18px;
+    border-radius: 10px;
+    cursor: pointer;
+    transition: .3s
+}
+
+.tw-ddot.on {
+    background: linear-gradient(180deg, var(--tw-sunrise), var(--tw-sunrise-deep));
+    color: #3a1c06;
+    border-color: transparent
+}
+
+
+/* slide-in when the destination changes */
+
+@keyframes tw-in-l {
+    from {
+        opacity: 0;
+        transform: perspective(1500px) rotateY(28deg) scale(.9) translateX(-90px)
+    }
+    to {
+        opacity: 1;
+        transform: perspective(1500px) rotateY(28deg) scale(.9) translateX(0)
+    }
+}
+
+@keyframes tw-in-r {
+    from {
+        opacity: 0;
+        transform: perspective(1500px) rotateY(-28deg) scale(.9) translateX(90px)
+    }
+    to {
+        opacity: 1;
+        transform: perspective(1500px) rotateY(-28deg) scale(.9) translateX(0)
+    }
+}
+
+@keyframes tw-in-c {
+    from {
+        opacity: 0;
+        transform: translateY(26px) scale(.96)
+    }
+    to {
+        opacity: 1;
+        transform: none
+    }
+}
+
+@keyframes tw-card {
+    from {
+        opacity: 0
+    }
+    to {
+        opacity: 1
+    }
+}
+
+.tw-dslide.anim .tw-dside--l {
+    animation: tw-in-l .95s cubic-bezier(.22, .7, .3, 1) both
+}
+
+.tw-dslide.anim .tw-dside--r {
+    animation: tw-in-r .95s cubic-bezier(.22, .7, .3, 1) both
+}
+
+.tw-dslide.anim .tw-dhero {
+    animation: tw-in-c .85s cubic-bezier(.22, .7, .3, 1) both;
+    animation-delay: .1s
+}
+
+.tw-dslide.anim .tw-dcard {
+    animation: tw-card .8s cubic-bezier(.22, .7, .3, 1) both
+}
+
+.tw-dslide.anim .tw-dside .tw-dcard:nth-child(1) {
+    animation-delay: .08s
+}
+
+.tw-dslide.anim .tw-dside .tw-dcard:nth-child(2) {
+    animation-delay: .22s
+}
+
+.tw-dslide.anim .tw-dside .tw-dcard:nth-child(3) {
+    animation-delay: .36s
+}
+
+.tw-dslide.anim .tw-dside .tw-dcard:nth-child(4) {
+    animation-delay: .5s
+}
+
+@media(min-width:1500px) {
+    .tw-dstage {
+        width: 1320px
+    }
+    .tw-dslide {
+        grid-template-columns: 1fr 250px 1fr;
+        gap: 30px
+    }
+    .tw-dest__head h2 {
+        font-size: 42px
+    }
+}
+
+@media(min-width:2000px) {
+    .tw-dstage {
+        width: 1480px
+    }
+    .tw-dslide {
+        grid-template-columns: 1fr 280px 1fr;
+        gap: 34px
+    }
+}
+
+@media(max-width:1000px) {
+    .tw-dside {
+        display: none
+    }
+    .tw-dslide.on {
+        grid-template-columns: min(330px, 86vw);
+        justify-content: center
+    }
+    .tw-dhero {
+        aspect-ratio: 4/5
+    }
+    .tw-dest__head h2 {
+        font-size: 30px
+    }
+}
+
+@media(prefers-reduced-motion:reduce) {
+    .tw-dslide.anim .tw-dside--l,
+    .tw-dslide.anim .tw-dside--r,
+    .tw-dslide.anim .tw-dhero,
+    .tw-dslide.anim .tw-dcard {
+        animation: none
     }
 }

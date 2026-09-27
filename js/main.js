@@ -9,9 +9,11 @@
         var pick = function() {
             var want = mq.matches ? v.dataset.srcDesktop : v.dataset.srcMobile;
             if (!want) { // no video for this screen -> show poster
-                if (v.getAttribute('src')) { v.pause();
+                if (v.getAttribute('src')) {
+                    v.pause();
                     v.removeAttribute('src');
-                    v.load(); }
+                    v.load();
+                }
                 v.style.display = 'none';
                 return;
             }
@@ -104,13 +106,17 @@
             var d = document.createElement('button');
             d.className = 'tw-dot';
             d.setAttribute('aria-label', 'Go to trip ' + (i + 1));
-            d.addEventListener('click', function() { twCur = i;
-                twRender(); });
+            d.addEventListener('click', function() {
+                twCur = i;
+                twRender();
+            });
             twDots.appendChild(d);
             c.addEventListener('click', function(e) {
-                if (i !== twCur) { e.preventDefault();
+                if (i !== twCur) {
+                    e.preventDefault();
                     twCur = i;
-                    twRender(); }
+                    twRender();
+                }
             });
         });
 
@@ -125,10 +131,39 @@
                 d.classList.toggle('on', i === twCur);
             });
         }
-        document.getElementById('tw-next').addEventListener('click', function() { twCur = (twCur + 1) % twN;
-            twRender(); });
-        document.getElementById('tw-prev').addEventListener('click', function() { twCur = (twCur - 1 + twN) % twN;
-            twRender(); });
+        document.getElementById('tw-next').addEventListener('click', function() {
+            twCur = (twCur + 1) % twN;
+            twRender();
+        });
+        document.getElementById('tw-prev').addEventListener('click', function() {
+            twCur = (twCur - 1 + twN) % twN;
+            twRender();
+        });
         twRender();
+    }
+    /* 7. Destinations showcase */
+    var dSlides = [].slice.call(document.querySelectorAll('.tw-dslide'));
+    if (dSlides.length) {
+        var dBgs = [].slice.call(document.querySelectorAll('.tw-dbg'));
+        var dDots = [].slice.call(document.querySelectorAll('.tw-ddot'));
+        var dN = dSlides.length,
+            dCur = 0;
+
+        function dGo(i) {
+            dCur = (i + dN) % dN;
+            dSlides.forEach(function(s, k) {
+                s.classList.remove('anim');
+                s.classList.toggle('on', k === dCur);
+            });
+            void dSlides[dCur].offsetWidth;
+            dSlides[dCur].classList.add('anim');
+            dBgs.forEach(function(b, k) { b.style.opacity = k === dCur ? 1 : 0; });
+            dDots.forEach(function(d, k) { d.classList.toggle('on', k === dCur); });
+        }
+        dDots.forEach(function(d, i) { d.addEventListener('click', function() { dGo(i); }); });
+        var dNext = document.getElementById('tw-dnext');
+        var dPrev = document.getElementById('tw-dprev');
+        if (dNext) { dNext.addEventListener('click', function() { dGo(dCur + 1); }); }
+        if (dPrev) { dPrev.addEventListener('click', function() { dGo(dCur - 1); }); }
     }
 })();

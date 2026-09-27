@@ -8,7 +8,7 @@ get_template_part( 'parts/header' );
 get_template_part( 'parts/hero' );
 ?>
 
-<!-- FEATURED TRIPS -->
+
 <!-- FEATURED TRIPS -->
 <section class="tw-trips">
 	<div class="tw-clouddiv-top" aria-hidden="true">
@@ -32,8 +32,8 @@ get_template_part( 'parts/hero' );
 
 	<div class="tw-trips__head">
 		<p class="tw-trips__eyebrow"><?php esc_html_e( 'In case you missed it', 'trekways' ); ?></p>
-		<h2><?php esc_html_e( 'Featured Trips', 'trekways' ); ?></h2>
-		<p><?php esc_html_e( 'Hand-picked routes across the Himalaya — guided by the team that knows them best.', 'trekways' ); ?></p>
+		<h2><?php esc_html_e( 'Featured Treks', 'trekways' ); ?></h2>
+		<p><?php esc_html_e( 'Hand-picked routes across the Himalaya - guided by the team that knows them best.', 'trekways' ); ?></p>
 	</div>
 
 	<?php
@@ -85,26 +85,28 @@ get_template_part( 'parts/hero' );
 	<?php endif; wp_reset_postdata(); ?>
 </section>
 
+<!-- ASSOCIATIONS + AWARDS -->
+    <?php
+    $tw_assoc  = trekways_logo_tiles( 'association' );
+    $tw_awards = trekways_logo_tiles( 'award' );
+    if ( $tw_assoc || $tw_awards ) : ?>
+    <section class="tw-logos">
+        <?php if ( $tw_assoc ) : ?>
+        <div class="tw-logos__row">
+            <div class="tw-logos__label"><small><?php esc_html_e( 'Trusted by', 'trekways' ); ?></small><?php esc_html_e( 'Our Associations', 'trekways' ); ?></div>
+            <div class="tw-marquee"><div class="tw-track"><?php echo $tw_assoc; // phpcs:ignore -- escaped in helper. ?></div></div>
+        </div>
+        <?php endif; ?>
+        <?php if ( $tw_awards ) : ?>
+        <div class="tw-logos__row">
+            <div class="tw-logos__label"><small><?php esc_html_e( 'Recognised for', 'trekways' ); ?></small><?php esc_html_e( 'Awards', 'trekways' ); ?></div>
+            <div class="tw-marquee tw-marquee--rev"><div class="tw-track"><?php echo $tw_awards; // phpcs:ignore -- escaped in helper. ?></div></div>
+        </div>
+        <?php endif; ?>
+    </section>
+    <?php endif; ?>
+
 <!-- DESTINATIONS -->
-<section class="tw-section tw-section--soft">
-	<div class="tw-container">
-		<p class="tw-eyebrow"><?php esc_html_e( 'Where to', 'trekways' ); ?></p>
-		<h2><?php esc_html_e( 'Our Destinations', 'trekways' ); ?></h2>
-		<?php
-		$dests = get_terms( array( 'taxonomy' => 'destination', 'parent' => 0, 'hide_empty' => false ) );
-		if ( ! is_wp_error( $dests ) && $dests ) : ?>
-			<div class="tw-grid tw-grid--4" style="margin-top:24px">
-			<?php foreach ( $dests as $d ) : ?>
-				<a class="tw-card" href="<?php echo esc_url( get_term_link( $d ) ); ?>" style="text-decoration:none">
-					<div class="tw-card__media"><img src="<?php echo esc_url( TREKWAYS_URI . '/images/trip-placeholder.webp' ); ?>" alt=""></div>
-					<div class="tw-card__body"><h3 class="tw-card__title"><?php echo esc_html( $d->name ); ?></h3></div>
-				</a>
-			<?php endforeach; ?>
-			</div>
-		<?php else : ?>
-			<p style="margin-top:16px;color:#6a6480"><?php esc_html_e( 'Add destinations (Nepal, Bhutan, Tibet, India) under Trips > Destinations.', 'trekways' ); ?></p>
-		<?php endif; ?>
-	</div>
-</section>
+<?php trekways_destinations_section(); ?>
 
 <?php get_template_part( 'parts/footer' );

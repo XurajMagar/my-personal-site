@@ -49,6 +49,8 @@ add_action( 'wp_enqueue_scripts', 'trekways_assets' );
 require TREKWAYS_DIR . '/inc/mega-menu.php';
 require TREKWAYS_DIR . '/inc/post-types.php';
 require TREKWAYS_DIR . '/inc/trip-fields.php';
+require TREKWAYS_DIR . '/inc/logos.php';
+require TREKWAYS_DIR . '/inc/destinations.php';
 require TREKWAYS_DIR . '/inc/taxonomies.php';
 require TREKWAYS_DIR . '/inc/booking.php';
 require TREKWAYS_DIR . '/inc/customizer.php';
