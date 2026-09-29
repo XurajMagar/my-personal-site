@@ -51,6 +51,7 @@ require TREKWAYS_DIR . '/inc/post-types.php';
 require TREKWAYS_DIR . '/inc/trip-fields.php';
 require TREKWAYS_DIR . '/inc/logos.php';
 require TREKWAYS_DIR . '/inc/destinations.php';
+require TREKWAYS_DIR . '/inc/why-section.php';
 require TREKWAYS_DIR . '/inc/taxonomies.php';
 require TREKWAYS_DIR . '/inc/booking.php';
 require TREKWAYS_DIR . '/inc/customizer.php';

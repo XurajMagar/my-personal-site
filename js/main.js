@@ -166,4 +166,42 @@
         if (dNext) { dNext.addEventListener('click', function() { dGo(dCur + 1); }); }
         if (dPrev) { dPrev.addEventListener('click', function() { dGo(dCur - 1); }); }
     }
+    /* 8. Why Trek Ways — region tabs + scroll intro */
+    var whySec = document.getElementById('tw-why');
+    if (whySec) {
+        var wSl = [].slice.call(whySec.querySelectorAll('.tw-pkslide'));
+        var wTb = [].slice.call(whySec.querySelectorAll('.tw-pktab'));
+        var wN = wSl.length,
+            wCur = 0;
+
+        function wGo(i) {
+            wCur = (i + wN) % wN;
+            wSl.forEach(function(s, k) {
+                s.classList.remove('anim');
+                s.classList.toggle('on', k === wCur);
+            });
+            void wSl[wCur].offsetWidth;
+            wSl[wCur].classList.add('anim');
+            wTb.forEach(function(t, k) { t.classList.toggle('on', k === wCur); });
+            if (wTb[wCur]) { wTb[wCur].scrollIntoView({ block: 'nearest', inline: 'center', behavior: 'smooth' }); }
+        }
+        wTb.forEach(function(t, i) { t.addEventListener('click', function() { wGo(i); }); });
+        var wNext = document.getElementById('tw-pknext');
+        var wPrev = document.getElementById('tw-pkprev');
+        if (wNext) { wNext.addEventListener('click', function() { wGo(wCur + 1); }); }
+        if (wPrev) { wPrev.addEventListener('click', function() { wGo(wCur - 1); }); }
+        if ('IntersectionObserver' in window) {
+            var wIo = new IntersectionObserver(function(es) {
+                es.forEach(function(e) {
+                    if (e.isIntersecting) {
+                        whySec.classList.add('seen');
+                        wIo.disconnect();
+                    }
+                });
+            }, { threshold: 0.15 });
+            wIo.observe(whySec);
+        } else {
+            whySec.classList.add('seen');
+        }
+    }
 })();

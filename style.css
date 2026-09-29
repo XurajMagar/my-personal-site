@@ -2833,3 +2833,414 @@ p.tw-trips__eyebrow {
         animation: none
     }
 }
+
+
+/* ============ Why Trek Ways — package comparison ============ */
+
+.tw-why {
+    background: linear-gradient(180deg, #faf8ff, #fff 38%);
+    padding: clamp(48px, 5vw, 84px) 0 clamp(44px, 5vw, 76px);
+    overflow: hidden;
+    --ok: #1f9d63;
+    --no: #d6453c;
+    --line: #ece9f5;
+    --mut: #6a6580
+}
+
+.tw-why__head {
+    max-width: 780px;
+    margin: 0 auto clamp(26px, 3vw, 42px);
+    text-align: center;
+    padding: 0 20px
+}
+
+.tw-why__head small {
+    display: block;
+    color: var(--tw-sunrise-deep);
+    font-size: 11px;
+    letter-spacing: .2em;
+    text-transform: uppercase;
+    font-weight: 800;
+    margin-bottom: 10px
+}
+
+.tw-why__head h2 {
+    font-family: var(--tw-font-display);
+    color: var(--tw-brand);
+    font-size: clamp(26px, 3.2vw, 42px);
+    margin-bottom: 12px;
+    line-height: 1.15
+}
+
+.tw-why__head p {
+    color: var(--mut);
+    font-size: clamp(14px, 1.1vw, 16px);
+    line-height: 1.65
+}
+
+.tw-pktabs {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    justify-content: center;
+    margin-bottom: clamp(24px, 2.6vw, 36px);
+    padding: 0 16px
+}
+
+.tw-pktabs__scroll {
+    display: flex;
+    gap: 8px;
+    overflow-x: auto;
+    scrollbar-width: none;
+    padding: 2px
+}
+
+.tw-pktabs__scroll::-webkit-scrollbar {
+    display: none
+}
+
+.tw-pktab {
+    flex: none;
+    background: #fff;
+    border: 1px solid var(--line);
+    color: var(--tw-brand);
+    font-family: var(--tw-font-body);
+    font-weight: 700;
+    font-size: 13.5px;
+    padding: 10px 20px;
+    border-radius: 11px;
+    cursor: pointer;
+    transition: .25s;
+    white-space: nowrap
+}
+
+.tw-pktab:hover {
+    border-color: var(--tw-violet)
+}
+
+.tw-pktab.on {
+    background: linear-gradient(180deg, var(--tw-sunrise), var(--tw-sunrise-deep));
+    color: #3a1c06;
+    border-color: transparent
+}
+
+.tw-pkbtn {
+    flex: none;
+    width: 42px;
+    height: 42px;
+    border-radius: 50%;
+    display: grid;
+    place-items: center;
+    cursor: pointer;
+    color: var(--tw-brand);
+    background: #fff;
+    border: 1px solid var(--line);
+    transition: .25s
+}
+
+.tw-pkbtn:hover {
+    background: var(--tw-brand);
+    color: #fff;
+    border-color: var(--tw-brand)
+}
+
+.tw-pkstage {
+    position: relative;
+    width: min(1180px, 100%);
+    margin: 0 auto;
+    padding: 0 20px
+}
+
+.tw-pkslide {
+    display: none;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 20px;
+    align-items: stretch
+}
+
+.tw-pkslide.on {
+    display: grid
+}
+
+.tw-pk {
+    position: relative;
+    background: #fff;
+    border: 1px solid var(--line);
+    border-radius: 18px;
+    padding: 30px 22px 22px;
+    display: flex;
+    flex-direction: column;
+    box-shadow: 0 16px 40px -30px rgba(30, 15, 66, .5)
+}
+
+.tw-pk--best {
+    background: linear-gradient(180deg, #32195f, #1b0e3d);
+    border-color: transparent;
+    color: #fff;
+    box-shadow: 0 28px 60px -28px rgba(30, 15, 66, .8), 0 0 0 1px rgba(139, 111, 232, .4)
+}
+
+.tw-pk__flag {
+    position: absolute;
+    top: -11px;
+    left: 50%;
+    transform: translateX(-50%);
+    background: linear-gradient(180deg, var(--tw-sunrise), var(--tw-sunrise-deep));
+    color: #3a1c06;
+    font-size: 10.5px;
+    font-weight: 800;
+    letter-spacing: .06em;
+    text-transform: uppercase;
+    padding: 5px 13px;
+    border-radius: 20px;
+    white-space: nowrap
+}
+
+.tw-pk__flag.alt {
+    background: #efeaf9;
+    color: var(--tw-brand)
+}
+
+.tw-pk__off {
+    position: absolute;
+    top: 12px;
+    right: 12px;
+    background: rgba(31, 157, 99, .12);
+    color: var(--ok);
+    font-size: 10.5px;
+    font-weight: 800;
+    padding: 4px 9px;
+    border-radius: 6px
+}
+
+.tw-pk--best .tw-pk__off {
+    background: rgba(255, 255, 255, .14);
+    color: #8ef0bd
+}
+
+.tw-pk h3 {
+    font-family: var(--tw-font-display);
+    font-size: 20px;
+    color: var(--tw-brand);
+    margin: 6px 0 14px;
+    line-height: 1.25;
+    min-height: 50px
+}
+
+.tw-pk--best h3 {
+    color: #fff
+}
+
+.tw-pk__price {
+    margin-bottom: 12px
+}
+
+.tw-pk__price .was {
+    display: block;
+    color: var(--mut);
+    font-size: 13px;
+    text-decoration: line-through;
+    margin-bottom: 2px
+}
+
+.tw-pk--best .tw-pk__price .was {
+    color: #a99ccc
+}
+
+.tw-pk__price strong {
+    font-family: var(--tw-font-display);
+    font-size: 30px;
+    color: var(--tw-brand)
+}
+
+.tw-pk--best .tw-pk__price strong {
+    color: var(--tw-sunrise)
+}
+
+.tw-pk__price small {
+    display: block;
+    color: var(--mut);
+    font-size: 11px;
+    margin-top: 2px
+}
+
+.tw-pk--best .tw-pk__price small {
+    color: var(--tw-ice)
+}
+
+.tw-pk__meta {
+    display: flex;
+    gap: 16px;
+    font-size: 12.5px;
+    font-weight: 600;
+    color: var(--mut);
+    padding-bottom: 14px;
+    border-bottom: 1px solid var(--line)
+}
+
+.tw-pk--best .tw-pk__meta {
+    color: var(--tw-ice);
+    border-color: rgba(255, 255, 255, .16)
+}
+
+.tw-pk__meta i {
+    color: var(--tw-violet);
+    margin-right: 6px
+}
+
+.tw-pk__list {
+    list-style: none;
+    padding: 14px 0 18px;
+    flex: 1
+}
+
+.tw-pk__list li {
+    display: flex;
+    gap: 9px;
+    font-size: 13px;
+    line-height: 1.45;
+    padding: 5px 0
+}
+
+.tw-pk--best .tw-pk__list li {
+    color: #efeaff
+}
+
+.tw-pk__list i {
+    font-size: 13px;
+    margin-top: 2px;
+    flex: none
+}
+
+.tw-pk__list .in i {
+    color: var(--ok)
+}
+
+.tw-pk__list .ex {
+    color: var(--mut)
+}
+
+.tw-pk--best .tw-pk__list .ex {
+    color: #a99ccc
+}
+
+.tw-pk__list .ex i {
+    color: var(--no)
+}
+
+.tw-pk__cta {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    margin-top: auto;
+    padding: 13px;
+    border-radius: 12px;
+    text-decoration: none;
+    font-weight: 800;
+    font-size: 14px;
+    border: 1px solid var(--tw-brand);
+    color: var(--tw-brand);
+    transition: .25s
+}
+
+.tw-pk__cta:hover {
+    background: var(--tw-brand);
+    color: #fff
+}
+
+.tw-pk--best .tw-pk__cta {
+    background: linear-gradient(180deg, var(--tw-sunrise), var(--tw-sunrise-deep));
+    color: #3a1c06;
+    border-color: transparent
+}
+
+.tw-pk--best .tw-pk__cta:hover {
+    filter: brightness(1.07)
+}
+
+.tw-why__head,
+.tw-pktabs,
+.tw-pk {
+    opacity: 0;
+    transform: translateY(26px);
+    transition: opacity .7s cubic-bezier(.22, .7, .3, 1), transform .7s cubic-bezier(.22, .7, .3, 1)
+}
+
+.tw-why.seen .tw-why__head {
+    opacity: 1;
+    transform: none
+}
+
+.tw-why.seen .tw-pktabs {
+    opacity: 1;
+    transform: none;
+    transition-delay: .1s
+}
+
+.tw-why.seen .tw-pk {
+    opacity: 1;
+    transform: none;
+    transition-delay: calc(.12s * var(--o) + .2s)
+}
+
+@keyframes tw-pkin {
+    from {
+        opacity: 0;
+        transform: translateY(20px)
+    }
+    to {
+        opacity: 1;
+        transform: none
+    }
+}
+
+.tw-pkslide.anim .tw-pk {
+    animation: tw-pkin .7s cubic-bezier(.22, .7, .3, 1) both;
+    transition: none
+}
+
+.tw-pkslide.anim .tw-pk:nth-child(2) {
+    animation-delay: .12s
+}
+
+.tw-pkslide.anim .tw-pk:nth-child(3) {
+    animation-delay: .24s
+}
+
+@media(max-width:900px) {
+    .tw-pkstage {
+        padding: 0
+    }
+    .tw-pkslide {
+        display: none
+    }
+    .tw-pkslide::-webkit-scrollbar {
+        display: none
+    }
+    .tw-pkslide.on {
+        display: flex;
+        overflow-x: auto;
+        scroll-snap-type: x mandatory;
+        gap: 14px;
+        padding: 14px 20px 8px;
+        scrollbar-width: none
+    }
+    .tw-pk {
+        flex: 0 0 85%;
+        scroll-snap-align: center
+    }
+    .tw-pktabs {
+        justify-content: flex-start
+    }
+}
+
+@media(prefers-reduced-motion:reduce) {
+    .tw-why__head,
+    .tw-pktabs,
+    .tw-pk {
+        opacity: 1;
+        transform: none;
+        transition: none
+    }
+}

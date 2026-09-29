@@ -109,4 +109,7 @@ get_template_part( 'parts/hero' );
 <!-- DESTINATIONS -->
 <?php trekways_destinations_section(); ?>
 
+<!-- WHY TREK WAYS -->
+<?php trekways_why_section(); ?>
+
 <?php get_template_part( 'parts/footer' );
