@@ -108,6 +108,10 @@ function trekways_why_card( $post, $index ) {
 	$dur   = trekways_meta( $post->ID, '_trip_duration' );
 	$diff  = trekways_meta( $post->ID, '_trip_difficulty' );
 	$inc   = trekways_lines( trekways_meta( $post->ID, '_trip_includes' ) );
+    	$book  = trekways_meta( $post->ID, '_trip_book_url' );
+	if ( ! $book ) {
+		$book = add_query_arg( 'trip', $post->post_name, get_permalink( $post ) );
+	}
 	$exc   = trekways_lines( trekways_meta( $post->ID, '_trip_excludes' ) );
 
 	$off = 0;
@@ -134,6 +138,7 @@ function trekways_why_card( $post, $index ) {
 			<?php if ( $diff ) : ?><span><i class="fa-solid fa-gauge-simple"></i><?php echo esc_html( $diff ); ?></span><?php endif; ?>
 		</div>
 		<?php endif; ?>
+        <a class="tw-pk__book" href="<?php echo esc_url( $book ); ?>"><?php esc_html_e( 'Book now', 'trekways' ); ?></a>
 		<ul class="tw-pk__list">
 			<?php foreach ( $inc as $x ) : ?><li class="in"><i class="fa-solid fa-circle-check"></i><?php echo esc_html( $x ); ?></li><?php endforeach; ?>
 			<?php foreach ( $exc as $x ) : ?><li class="ex"><i class="fa-solid fa-circle-xmark"></i><?php echo esc_html( $x ); ?></li><?php endforeach; ?>

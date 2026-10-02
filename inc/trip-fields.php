@@ -19,6 +19,7 @@ function trekways_trip_fields() {
 			'type'    => 'select',
 			'options' => array( '' => '— Not in comparison —', 'standard' => 'Standard', 'best' => 'Most booked', 'luxury' => 'Luxury' ),
 		),
+        '_trip_book_url'   => array( 'label' => __( 'Book now link (leave empty to use the trip page)', 'trekways' ), 'type' => 'text' ),
 		'_trip_includes'   => array( 'label' => __( "What's included — one per line", 'trekways' ), 'type' => 'textarea' ),
 		'_trip_excludes'   => array( 'label' => __( "What's not included — one per line", 'trekways' ), 'type' => 'textarea' ),
 		'_trip_duration'   => array( 'label' => __( 'Duration (e.g. 14 Days)', 'trekways' ), 'type' => 'text' ),

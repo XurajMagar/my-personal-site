@@ -2667,8 +2667,25 @@ p.tw-trips__eyebrow {
     justify-content: center;
     gap: 10px;
     margin-top: 30px;
-    flex-wrap: wrap;
+    flex-wrap: nowrap;
     padding: 0 16px
+}
+
+.tw-dnav__scroll {
+    display: flex;
+    gap: 8px;
+    overflow-x: auto;
+    scrollbar-width: none;
+    padding: 2px;
+    scroll-behavior: smooth
+}
+
+.tw-dnav__scroll::-webkit-scrollbar {
+    display: none
+}
+
+.tw-ddot {
+    flex: none
 }
 
 .tw-dbtn {
@@ -3243,4 +3260,62 @@ p.tw-trips__eyebrow {
         transform: none;
         transition: none
     }
+}
+
+
+/* Why Trek Ways — Book now / Know more hierarchy */
+
+.tw-pk__book {
+    display: block;
+    text-align: center;
+    margin: 16px 0 2px;
+    padding: 13px;
+    border-radius: 12px;
+    text-decoration: none;
+    font-weight: 800;
+    font-size: 14px;
+    background: var(--tw-brand);
+    color: #fff;
+    transition: .25s
+}
+
+.tw-pk__book:hover {
+    background: #3d2178;
+    transform: translateY(-1px)
+}
+
+.tw-pk--best .tw-pk__book {
+    background: linear-gradient(180deg, var(--tw-sunrise), var(--tw-sunrise-deep));
+    color: #3a1c06
+}
+
+.tw-pk--best .tw-pk__book:hover {
+    filter: brightness(1.07)
+}
+
+.tw-pk__cta {
+    border: 1px solid var(--line);
+    color: var(--tw-brand);
+    background: #fff;
+    padding: 12px;
+    font-size: 13.5px
+}
+
+.tw-pk__cta:hover {
+    border-color: var(--tw-brand);
+    background: #faf8ff;
+    color: var(--tw-brand)
+}
+
+.tw-pk--best .tw-pk__cta {
+    background: transparent;
+    border-color: rgba(255, 255, 255, .3);
+    color: #fff
+}
+
+.tw-pk--best .tw-pk__cta:hover {
+    background: rgba(255, 255, 255, .1);
+    border-color: rgba(255, 255, 255, .5);
+    filter: none;
+    color: #fff
 }

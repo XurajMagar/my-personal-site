@@ -159,6 +159,7 @@
             dSlides[dCur].classList.add('anim');
             dBgs.forEach(function(b, k) { b.style.opacity = k === dCur ? 1 : 0; });
             dDots.forEach(function(d, k) { d.classList.toggle('on', k === dCur); });
+            if (dDots[dCur]) { dDots[dCur].scrollIntoView({ block: 'nearest', inline: 'center', behavior: 'smooth' }); }
         }
         dDots.forEach(function(d, i) { d.addEventListener('click', function() { dGo(i); }); });
         var dNext = document.getElementById('tw-dnext');

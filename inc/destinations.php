@@ -190,10 +190,12 @@ function trekways_destinations_section() {
 
 	<?php if ( count( $slides ) > 1 ) : ?>
 	<div class="tw-dnav">
-		<button class="tw-dbtn" id="tw-dprev" aria-label="<?php esc_attr_e( 'Previous destination', 'trekways' ); ?>"><i class="fa-solid fa-chevron-left"></i></button>
-		<?php foreach ( $slides as $i => $s ) : ?>
-			<button class="tw-ddot<?php echo 0 === $i ? ' on' : ''; ?>" data-i="<?php echo (int) $i; ?>"><?php echo esc_html( $s['term']->name ); ?></button>
-		<?php endforeach; ?>
+				<button class="tw-dbtn" id="tw-dprev" aria-label="<?php esc_attr_e( 'Previous destination', 'trekways' ); ?>"><i class="fa-solid fa-chevron-left"></i></button>
+		<div class="tw-dnav__scroll">
+			<?php foreach ( $slides as $i => $s ) : ?>
+				<button class="tw-ddot<?php echo 0 === $i ? ' on' : ''; ?>" data-i="<?php echo (int) $i; ?>"><?php echo esc_html( $s['term']->name ); ?></button>
+			<?php endforeach; ?>
+		</div>
 		<button class="tw-dbtn" id="tw-dnext" aria-label="<?php esc_attr_e( 'Next destination', 'trekways' ); ?>"><i class="fa-solid fa-chevron-right"></i></button>
 	</div>
 	<?php endif; ?>
