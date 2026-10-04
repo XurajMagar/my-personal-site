@@ -55,6 +55,7 @@ require TREKWAYS_DIR . '/inc/why-section.php';
 require TREKWAYS_DIR . '/inc/taxonomies.php';
 require TREKWAYS_DIR . '/inc/booking.php';
 require TREKWAYS_DIR . '/inc/customizer.php';
+require TREKWAYS_DIR . '/inc/region-packages.php';
 
 /* 4. Flush rewrites on activation ------------------------------------- */
 function trekways_flush_rewrites() {

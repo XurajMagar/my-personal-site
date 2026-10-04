@@ -112,4 +112,7 @@ get_template_part( 'parts/hero' );
 <!-- WHY TREK WAYS -->
 <?php trekways_why_section(); ?>
 
+<!-- REGION PACKAGES -->
+<?php trekways_pkgs_section(); ?>
+
 <?php get_template_part( 'parts/footer' );

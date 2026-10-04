@@ -205,4 +205,92 @@
             whySec.classList.add('seen');
         }
     }
+    /* 9. Region packages: region tabs, arrows, mobile progress, scroll intro, cloud pause */
+    var pkSec = document.getElementById('tw-pkgs');
+    if (pkSec) {
+        var pkScroll = document.getElementById('tw-rscroll');
+        var pkTabs = Array.prototype.slice.call(pkSec.querySelectorAll('.tw-rtab'));
+        var pkPanels = Array.prototype.slice.call(pkSec.querySelectorAll('.tw-pgrid'));
+        var pkPrev = document.getElementById('tw-rprev');
+        var pkNext = document.getElementById('tw-rnext');
+        var pkBar = document.getElementById('tw-pbar');
+        var pkCur = 0;
+        var pkBusy = false;
+
+        var pkUpdateBar = function() {
+            var g = pkPanels[pkCur];
+            if (!pkBar || !g) { return; }
+            var max = g.scrollWidth - g.clientWidth;
+            var vis = g.scrollWidth ? g.clientWidth / g.scrollWidth : 1;
+            var pos = max > 0 ? g.scrollLeft / max : 0;
+            var w = Math.max(vis, 0.12);
+            pkBar.style.width = (w + (1 - w) * pos) * 100 + '%';
+        };
+
+        var pkArrows = function() {
+            if (!pkScroll || !pkPrev || !pkNext) { return; }
+            var max = pkScroll.scrollWidth - pkScroll.clientWidth - 2;
+            pkPrev.disabled = pkScroll.scrollLeft <= 2;
+            pkNext.disabled = pkScroll.scrollLeft >= max;
+        };
+
+        var pkGo = function(i, focus) {
+            if (i === pkCur || i < 0 || i >= pkTabs.length || pkBusy) { return; }
+            pkBusy = true;
+            var from = pkPanels[pkCur];
+            var to = pkPanels[i];
+            pkTabs.forEach(function(t, k) {
+                t.setAttribute('aria-selected', k === i ? 'true' : 'false');
+                t.tabIndex = k === i ? 0 : -1;
+            });
+            pkTabs[i].scrollIntoView({ block: 'nearest', inline: 'center', behavior: 'smooth' });
+            if (focus) { pkTabs[i].focus({ preventScroll: true }); }
+            from.classList.add('swap');
+            setTimeout(function() {
+                from.hidden = true;
+                from.classList.remove('swap', 'play');
+                to.classList.remove('play');
+                to.hidden = false;
+                to.scrollLeft = 0;
+                void to.offsetWidth; /* restart the card stagger */
+                to.classList.add('play');
+                pkCur = i;
+                pkUpdateBar();
+                pkBusy = false;
+            }, 220);
+        };
+
+        pkTabs.forEach(function(t, i) {
+            t.addEventListener('click', function() { pkGo(i, false); });
+            t.addEventListener('keydown', function(e) {
+                if (e.key === 'ArrowRight') { e.preventDefault();
+                    pkGo(Math.min(i + 1, pkTabs.length - 1), true); }
+                if (e.key === 'ArrowLeft') { e.preventDefault();
+                    pkGo(Math.max(i - 1, 0), true); }
+            });
+        });
+
+        if (pkScroll && pkPrev && pkNext) {
+            pkPrev.addEventListener('click', function() { pkScroll.scrollBy({ left: -pkScroll.clientWidth * 0.7 }); });
+            pkNext.addEventListener('click', function() { pkScroll.scrollBy({ left: pkScroll.clientWidth * 0.7 }); });
+            pkScroll.addEventListener('scroll', pkArrows, { passive: true });
+        }
+        pkPanels.forEach(function(g) { g.addEventListener('scroll', pkUpdateBar, { passive: true }); });
+        window.addEventListener('resize', function() { pkArrows();
+            pkUpdateBar(); });
+
+        if ('IntersectionObserver' in window) {
+            new IntersectionObserver(function(es) {
+                es.forEach(function(e) {
+                    if (e.isIntersecting) { pkSec.classList.add('in'); }
+                    pkSec.classList.toggle('off', !e.isIntersecting);
+                });
+            }, { threshold: 0.15 }).observe(pkSec);
+        } else {
+            pkSec.classList.add('in');
+        }
+
+        pkArrows();
+        pkUpdateBar();
+    }
 })();
