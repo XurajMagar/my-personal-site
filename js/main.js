@@ -263,10 +263,14 @@
         pkTabs.forEach(function(t, i) {
             t.addEventListener('click', function() { pkGo(i, false); });
             t.addEventListener('keydown', function(e) {
-                if (e.key === 'ArrowRight') { e.preventDefault();
-                    pkGo(Math.min(i + 1, pkTabs.length - 1), true); }
-                if (e.key === 'ArrowLeft') { e.preventDefault();
-                    pkGo(Math.max(i - 1, 0), true); }
+                if (e.key === 'ArrowRight') {
+                    e.preventDefault();
+                    pkGo(Math.min(i + 1, pkTabs.length - 1), true);
+                }
+                if (e.key === 'ArrowLeft') {
+                    e.preventDefault();
+                    pkGo(Math.max(i - 1, 0), true);
+                }
             });
         });
 
@@ -276,8 +280,10 @@
             pkScroll.addEventListener('scroll', pkArrows, { passive: true });
         }
         pkPanels.forEach(function(g) { g.addEventListener('scroll', pkUpdateBar, { passive: true }); });
-        window.addEventListener('resize', function() { pkArrows();
-            pkUpdateBar(); });
+        window.addEventListener('resize', function() {
+            pkArrows();
+            pkUpdateBar();
+        });
 
         if ('IntersectionObserver' in window) {
             new IntersectionObserver(function(es) {
@@ -292,5 +298,49 @@
 
         pkArrows();
         pkUpdateBar();
+    }
+    /* 10. About: team slider arrows + entrance fallback for browsers without scroll-driven animations */
+    var abSec = document.getElementById('tw-about');
+    if (abSec) {
+        var abTeam = abSec.querySelector('.tw-team');
+        var abList = document.getElementById('tw-team-list');
+        var abPrev = document.getElementById('tw-team-prev');
+        var abNext = document.getElementById('tw-team-next');
+
+        if (abTeam && abList && abPrev && abNext) {
+            var abUpdate = function() {
+                var max = abList.scrollWidth - abList.clientWidth;
+                abTeam.classList.toggle('fits', max <= 2);
+                abPrev.disabled = abList.scrollLeft <= 2;
+                abNext.disabled = abList.scrollLeft >= max - 2;
+            };
+            var abStep = function() {
+                var item = abList.querySelector('.tw-team__item');
+                if (!item) { return abList.clientWidth * 0.8; }
+                var w = item.offsetWidth + (parseFloat(getComputedStyle(abList).columnGap) || 0);
+                return w * Math.max(1, Math.floor(abList.clientWidth / w) - 1);
+            };
+            abPrev.addEventListener('click', function() { abList.scrollBy({ left: -abStep() }); });
+            abNext.addEventListener('click', function() { abList.scrollBy({ left: abStep() }); });
+            abList.addEventListener('scroll', abUpdate, { passive: true });
+            window.addEventListener('resize', abUpdate);
+            window.addEventListener('load', abUpdate);
+            abUpdate();
+        }
+
+        var abScrollDriven = window.CSS && CSS.supports && CSS.supports('animation-timeline: view()');
+        var abReduce = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+        if (!abScrollDriven && !abReduce && 'IntersectionObserver' in window) {
+            abSec.classList.add('io');
+            var abIo = new IntersectionObserver(function(es) {
+                es.forEach(function(e) {
+                    if (e.isIntersecting) {
+                        abSec.classList.add('in');
+                        abIo.disconnect();
+                    }
+                });
+            }, { threshold: 0.2 });
+            abIo.observe(abSec);
+        }
     }
 })();

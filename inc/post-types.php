@@ -37,17 +37,41 @@ function trekways_register_post_types() {
 	/* ---------------------------------------------------------------
 	 * TEAM MEMBER
 	 * ------------------------------------------------------------- */
+		/* ---------------------------------------------------------------
+	 * TEAM MEMBER
+	 * Admin-only list that feeds the "Meet the team" slider on the
+	 * homepage. No public single pages: they had no template.
+	 * ------------------------------------------------------------- */
 	register_post_type( 'team_member', array(
 		'labels' => array(
-			'name'          => __( 'Team', 'trekways' ),
-			'singular_name' => __( 'Team Member', 'trekways' ),
-			'menu_name'     => __( 'Team', 'trekways' ),
+			'name'                  => __( 'Team', 'trekways' ),
+			'singular_name'         => __( 'Team Member', 'trekways' ),
+			'menu_name'             => __( 'Team', 'trekways' ),
+			'all_items'             => __( 'All Team Members', 'trekways' ),
+			'add_new'               => __( 'Add Team Member', 'trekways' ),
+			'add_new_item'          => __( 'Add Team Member', 'trekways' ),
+			'edit_item'             => __( 'Edit Team Member', 'trekways' ),
+			'new_item'              => __( 'New Team Member', 'trekways' ),
+			'view_item'             => __( 'View Team Member', 'trekways' ),
+			'search_items'          => __( 'Search Team', 'trekways' ),
+			'not_found'             => __( 'No team members yet.', 'trekways' ),
+			'not_found_in_trash'    => __( 'No team members in Trash.', 'trekways' ),
+			'item_published'        => __( 'Team member published.', 'trekways' ),
+			'item_updated'          => __( 'Team member updated.', 'trekways' ),
+			'featured_image'        => __( 'Photo', 'trekways' ),
+			'set_featured_image'    => __( 'Set photo', 'trekways' ),
+			'remove_featured_image' => __( 'Remove photo', 'trekways' ),
+			'use_featured_image'    => __( 'Use as photo', 'trekways' ),
 		),
-		'public'      => true,
-		'has_archive' => false,
-		'menu_icon'   => 'dashicons-groups',
-		'supports'    => array( 'title', 'editor', 'thumbnail' ),
-		'rewrite'     => array( 'slug' => 'team', 'with_front' => false ),
+		'public'              => false,
+		'show_ui'             => true,
+		'show_in_menu'        => true,
+		'show_in_nav_menus'   => false,
+		'exclude_from_search' => true,
+		'has_archive'         => false,
+		'rewrite'             => false,
+		'menu_icon'           => 'dashicons-groups',
+		'supports'            => array( 'title', 'thumbnail', 'page-attributes' ),
 	) );
 
 	/* ---------------------------------------------------------------

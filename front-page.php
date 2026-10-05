@@ -52,6 +52,14 @@ get_template_part( 'parts/hero' );
 	}
 	if ( $trips->have_posts() ) : ?>
 	<div class="tw-stage" id="tw-stage">
+        	<div class="tw-vajra" aria-hidden="true">
+			<div class="tw-vajra__base"></div>
+			<div class="tw-vajra__core"></div>
+			<div class="tw-vajra__flow"></div>
+			<div class="tw-vajra__flow tw-vajra__flow--l"></div>
+			<div class="tw-vajra__flow tw-vajra__flow--late"></div>
+			<div class="tw-vajra__flow tw-vajra__flow--l tw-vajra__flow--late"></div>
+		</div>
 		<?php $i = 0; while ( $trips->have_posts() ) : $trips->the_post();
 			$price = trekways_meta( get_the_ID(), '_trip_price' );
 			$dur   = trekways_meta( get_the_ID(), '_trip_duration' );
@@ -114,5 +122,8 @@ get_template_part( 'parts/hero' );
 
 <!-- REGION PACKAGES -->
 <?php trekways_pkgs_section(); ?>
+
+<!-- ABOUT -->
+<?php trekways_about_section(); ?>
 
 <?php get_template_part( 'parts/footer' );
