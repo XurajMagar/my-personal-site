@@ -101,7 +101,15 @@ function trekways_pkgs_data() {
  * @param int     $i    Position, drives the stagger delay.
  * @return string
  */
-function trekways_pkgs_card( $post, $i ) {
+/**
+ * One package card, styled as a trek permit ticket with a big day count.
+ *
+ * @param WP_Post $post   Trip.
+ * @param int     $i      Position, drives the stagger delay.
+ * @param string  $region Region name shown above the title.
+ * @return string
+ */
+function trekways_pkgs_card( $post, $i, $region = '' ) {
 	$id     = $post->ID;
 	$price  = trekways_meta( $id, '_trip_price' );
 	$was    = trekways_meta( $id, '_trip_price_was' );
@@ -111,6 +119,21 @@ function trekways_pkgs_card( $post, $i ) {
 	$group  = trekways_meta( $id, '_trip_group_size' );
 	$season = trekways_meta( $id, '_trip_season' );
 	$badge  = trekways_meta( $id, '_trip_badge' );
+
+	/* "14 Days" -> 14 for the big numeral. No number, no numeral. */
+	$days = preg_match( '/\d+/', (string) $dur, $m ) ? (int) $m[0] : 0;
+
+	/* Difficulty -> 1-4 bars. Unknown wording shows the word without bars. */
+	$levels = array( 'easy' => 1, 'moderate' => 2, 'challenging' => 3, 'strenuous' => 4 );
+	$level  = isset( $levels[ strtolower( trim( (string) $diff ) ) ] ) ? $levels[ strtolower( trim( (string) $diff ) ) ] : 0;
+	$meter  = '';
+	if ( $level ) {
+		$meter = '<span class="tw-meter" aria-hidden="true">';
+		for ( $b = 1; $b <= 4; $b++ ) {
+			$meter .= '<i' . ( $b <= $level ? ' class="on"' : '' ) . '></i>';
+		}
+		$meter .= '</span>';
+	}
 
 	$img_attr = array(
 		'class'    => 'tw-pcard__ph',
@@ -125,33 +148,38 @@ function trekways_pkgs_card( $post, $i ) {
 	}
 
 	$facts = array(
-		array( 'fa-signal', $diff ),
-		array( 'fa-mountain', $alt ),
-		array( 'fa-user-group', $group ),
-		array( 'fa-calendar', $season ),
+		array( __( 'Max altitude', 'trekways' ), esc_html( $alt ) ),
+		array( __( 'Grade', 'trekways' ), $diff ? $meter . esc_html( $diff ) : '' ),
+		/* translators: %s: group size range, e.g. 2-12. */
+		array( __( 'Group', 'trekways' ), $group ? esc_html( sprintf( __( '%s people', 'trekways' ), $group ) ) : '' ),
+		array( __( 'Best season', 'trekways' ), esc_html( $season ) ),
 	);
 
 	$out  = '<a class="tw-pcard" href="' . esc_url( get_permalink( $id ) ) . '" style="--i:' . (int) $i . '">';
+	$out .= '<div class="tw-pcard__ticket">';
 	$out .= '<div class="tw-pcard__img">' . $img;
 	if ( $badge ) {
 		$out .= '<span class="tw-pcard__badge">' . esc_html( $badge ) . '</span>';
 	}
-	if ( $dur ) {
-		$out .= '<span class="tw-pcard__days"><i class="fa-regular fa-clock" aria-hidden="true"></i>' . esc_html( $dur ) . '</span>';
+	if ( $days ) {
+		$out .= '<span class="tw-pcard__num">' . $days . '<small>' . esc_html( _n( 'Day', 'Days', $days, 'trekways' ) ) . '</small></span>';
 	}
-	$out .= '</div><div class="tw-pcard__body"><h3>' . esc_html( get_the_title( $id ) ) . '</h3>';
+	$out .= '</div><div class="tw-pcard__body">';
+	if ( $region ) {
+		$out .= '<span class="tw-pcard__region">' . esc_html( $region ) . '</span>';
+	}
+	$out .= '<h3>' . esc_html( get_the_title( $id ) ) . '</h3>';
 
-	$li = '';
+	$dl = '';
 	foreach ( $facts as $f ) {
-		if ( $f[1] ) {
-			$li .= '<li><i class="fa-solid ' . esc_attr( $f[0] ) . '" aria-hidden="true"></i>' . esc_html( $f[1] ) . '</li>';
+		if ( '' !== $f[1] ) {
+			$dl .= '<div><dt>' . esc_html( $f[0] ) . '</dt><dd>' . $f[1] . '</dd></div>'; // dd escaped when built above.
 		}
 	}
-	if ( $li ) {
-		$out .= '<ul class="tw-pcard__facts">' . $li . '</ul>';
+	if ( $dl ) {
+		$out .= '<dl class="tw-pcard__grid">' . $dl . '</dl>';
 	}
-
-	$out .= '<div class="tw-pcard__foot"><div class="tw-pcard__price">';
+	$out .= '</div><div class="tw-pcard__stub"><div>';
 	if ( $price ) {
 		$out .= '<small>' . esc_html__( 'From, per person', 'trekways' ) . '</small>';
 		if ( $was ) {
@@ -161,7 +189,7 @@ function trekways_pkgs_card( $post, $i ) {
 	} else {
 		$out .= '<strong class="tw-pcard__ask">' . esc_html__( 'Price on request', 'trekways' ) . '</strong>';
 	}
-	$out .= '</div><span class="tw-pcard__go" aria-hidden="true"><i class="fa-solid fa-arrow-right"></i></span></div>';
+	$out .= '</div><em>' . esc_html__( 'Book', 'trekways' ) . ' <i class="fa-solid fa-arrow-right" aria-hidden="true"></i></em></div>';
 	$out .= '</div></a>';
 	return $out;
 }
@@ -231,20 +259,17 @@ function trekways_pkgs_section() {
 			<div class="tw-pgrid<?php echo 0 === $i ? ' play' : ''; ?>" id="tw-rpanel-<?php echo (int) $i; ?>" role="tabpanel" aria-labelledby="tw-rtab-<?php echo (int) $i; ?>"<?php echo 0 === $i ? '' : ' hidden'; ?>>
 				<?php
 				foreach ( $posts as $k => $p ) {
-					echo trekways_pkgs_card( $p, $k ); // phpcs:ignore -- escaped in helper.
+					echo trekways_pkgs_card( $p, $k, $r['term']->name ); // phpcs:ignore -- escaped in helper.
 				}
 				if ( $more && ! is_wp_error( $link ) ) :
 					?>
 					<a class="tw-pcard tw-pmore" href="<?php echo esc_url( $link ); ?>" style="--i:<?php echo count( $posts ); ?>">
+						<span class="tw-pcard__num"><?php echo (int) $r['total']; ?><small><?php esc_html_e( 'Trips', 'trekways' ); ?></small></span>
 						<b><?php
 							/* translators: %s: region name. */
 							printf( esc_html__( 'View all %s packages', 'trekways' ), esc_html( $r['term']->name ) );
 						?></b>
-						<em><?php
-							/* translators: %d: number of trips. */
-							printf( esc_html( _n( '%d trip in this region', '%d trips in this region', $r['total'], 'trekways' ) ), (int) $r['total'] );
-						?></em>
-						<span aria-hidden="true"><i class="fa-solid fa-arrow-right"></i></span>
+						<span class="tw-pmore__go" aria-hidden="true"><i class="fa-solid fa-arrow-right"></i></span>
 					</a>
 				<?php endif; ?>
 			</div>

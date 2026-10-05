@@ -3610,7 +3610,10 @@ p.tw-trips__eyebrow {
 }
 
 
-/* card */
+/* card: trek permit ticket + big day count
+   Outer .tw-pcard carries the intro animation and the shadow.
+   Inner .tw-pcard__ticket carries the notch mask and the hover lift,
+   so the intro's end state never blocks the hover transform. */
 
 .tw-pcard {
     position: relative;
@@ -3618,11 +3621,7 @@ p.tw-trips__eyebrow {
     flex-direction: column;
     text-decoration: none;
     color: var(--tw-ink);
-    background: #fff;
-    border-radius: 16px;
-    overflow: hidden;
-    box-shadow: 0 18px 40px -26px rgba(8, 2, 24, .9);
-    transition: transform .5s cubic-bezier(.2, .8, .2, 1), box-shadow .5s
+    filter: drop-shadow(0 18px 22px rgba(8, 2, 24, .45))
 }
 
 .tw-pkgs.in .tw-pgrid.play .tw-pcard {
@@ -3640,29 +3639,25 @@ p.tw-trips__eyebrow {
     }
 }
 
-.tw-pcard::after {
-    content: "";
-    position: absolute;
-    inset: 0;
-    border-radius: inherit;
-    pointer-events: none;
-    border: 2px solid transparent;
-    transition: border-color .4s
-}
-
-.tw-pcard:hover {
-    transform: translateY(-8px);
-    box-shadow: 0 30px 50px -24px rgba(8, 2, 24, .95)
-}
-
-.tw-pcard:hover::after {
-    border-color: var(--tw-sunrise)
+.tw-pcard__ticket {
+    --stub: 86px;
+    --notch: 12px;
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    background: #fff;
+    border-radius: 18px;
+    -webkit-mask: radial-gradient(circle var(--notch) at 0 calc(100% - var(--stub)), #0000 98%, #000) left / 51% 100% no-repeat, radial-gradient(circle var(--notch) at 100% calc(100% - var(--stub)), #0000 98%, #000) right / 51% 100% no-repeat;
+    mask: radial-gradient(circle var(--notch) at 0 calc(100% - var(--stub)), #0000 98%, #000) left / 51% 100% no-repeat, radial-gradient(circle var(--notch) at 100% calc(100% - var(--stub)), #0000 98%, #000) right / 51% 100% no-repeat;
+    transition: transform .5s cubic-bezier(.2, .8, .2, 1)
 }
 
 .tw-pcard__img {
     position: relative;
     aspect-ratio: 16/11;
     overflow: hidden;
+    margin: 10px 10px 0;
+    border-radius: 12px;
     background: var(--tw-brand-700)
 }
 
@@ -3672,26 +3667,25 @@ p.tw-trips__eyebrow {
     width: 100%;
     height: 100%;
     object-fit: cover;
-    transition: transform 1s cubic-bezier(.2, .8, .2, 1)
+    transition: transform 1.1s cubic-bezier(.2, .8, .2, 1)
 }
 
-.tw-pcard:hover .tw-pcard__ph {
-    transform: scale(1.08)
-}
+
+/* darkens the top-right corner so the outlined numeral reads on bright photos */
 
 .tw-pcard__img::after {
     content: "";
     position: absolute;
-    inset: auto 0 0;
-    height: 45%;
-    background: linear-gradient(transparent, rgba(20, 8, 48, .55))
+    inset: 0;
+    pointer-events: none;
+    background: linear-gradient(200deg, rgba(20, 8, 48, .45) 0%, rgba(20, 8, 48, 0) 40%, rgba(20, 8, 48, 0) 70%, rgba(20, 8, 48, .35) 100%)
 }
 
 .tw-pcard__badge {
     position: absolute;
-    z-index: 1;
-    top: 12px;
-    left: 12px;
+    z-index: 2;
+    top: 10px;
+    left: 10px;
     font-size: 11px;
     font-weight: 800;
     padding: 6px 10px;
@@ -3700,162 +3694,260 @@ p.tw-trips__eyebrow {
     color: #3a1c06
 }
 
-.tw-pcard__days {
+.tw-pcard__num {
     position: absolute;
-    z-index: 1;
-    left: 12px;
-    bottom: 10px;
+    z-index: 2;
+    right: 12px;
+    top: 8px;
+    text-align: right;
+    pointer-events: none;
+    font-family: var(--tw-font-display);
+    font-weight: 800;
+    font-size: clamp(58px, 4.8vw, 84px);
+    line-height: .82;
+    letter-spacing: -.02em;
+    color: transparent;
+    -webkit-text-stroke: 1.6px rgba(255, 255, 255, .95);
+    filter: drop-shadow(0 2px 10px rgba(20, 8, 48, .45));
+    transition: color .45s ease, -webkit-text-stroke-color .45s ease, transform .5s cubic-bezier(.2, .8, .2, 1)
+}
+
+.tw-pcard__num small {
+    display: block;
+    margin-top: 6px;
+    font-family: var(--tw-font-body);
+    font-size: 11px;
+    font-weight: 800;
+    letter-spacing: .22em;
+    text-transform: uppercase;
     color: #fff;
-    font-weight: 700;
-    font-size: 13px;
-    display: flex;
-    align-items: center;
-    gap: 6px
+    -webkit-text-stroke: 0;
+    transition: color .45s ease, letter-spacing .45s ease
 }
 
 .tw-pcard__body {
-    display: flex;
-    flex-direction: column;
     flex: 1;
-    padding: 16px 16px 14px
+    padding: 14px 16px 16px
+}
+
+.tw-pcard__region {
+    font-size: 11px;
+    font-weight: 800;
+    letter-spacing: .14em;
+    text-transform: uppercase;
+    color: var(--tw-violet)
 }
 
 .tw-pcard__body h3 {
     font-family: var(--tw-font-display);
-    font-size: clamp(17px, 1.25vw, 20px);
-    line-height: 1.2;
-    margin: 0 0 12px;
+    font-size: clamp(18px, 1.3vw, 21px);
+    line-height: 1.15;
+    margin: 4px 0 12px;
     color: var(--tw-brand);
     font-weight: 700
 }
 
-.tw-pcard__facts {
+.tw-pcard__grid {
     display: grid;
     grid-template-columns: 1fr 1fr;
-    gap: 8px 12px;
-    margin: 0 0 14px;
-    padding: 0;
-    list-style: none;
-    font-size: 12.5px;
-    color: #5d5775
+    gap: 10px;
+    margin: 0;
+    font-size: 12.5px
 }
 
-.tw-pcard__facts li {
+.tw-pcard__grid dt {
+    font-size: 10px;
+    font-weight: 800;
+    letter-spacing: .1em;
+    text-transform: uppercase;
+    color: #8a84a0
+}
+
+.tw-pcard__grid dd {
+    margin: 0;
     display: flex;
     align-items: center;
-    gap: 7px;
-    min-width: 0
+    font-weight: 700;
+    color: var(--tw-ink)
 }
 
-.tw-pcard__facts i {
-    color: var(--tw-violet);
-    width: 14px;
-    text-align: center;
-    font-size: 12px
-}
-
-.tw-pcard__foot {
-    margin-top: auto;
-    display: flex;
+.tw-meter {
+    display: inline-flex;
+    gap: 3px;
     align-items: flex-end;
-    justify-content: space-between;
-    gap: 10px;
-    padding-top: 12px;
-    border-top: 1px solid #ece9f5
-}
-
-.tw-pcard__price small {
-    display: block;
-    font-size: 11px;
-    color: #8a84a0;
-    font-weight: 600
-}
-
-.tw-pcard__price s {
-    color: #a39dba;
-    font-size: 12.5px;
     margin-right: 6px
 }
 
-.tw-pcard__price strong {
-    font-family: var(--tw-font-display);
-    font-size: 20px;
-    color: var(--tw-ink);
-    font-weight: 800
+.tw-meter i {
+    width: 4px;
+    border-radius: 2px;
+    background: #d9d3ea
 }
 
-.tw-pcard__price .tw-pcard__ask {
+.tw-meter i:nth-child(1) {
+    height: 6px
+}
+
+.tw-meter i:nth-child(2) {
+    height: 9px
+}
+
+.tw-meter i:nth-child(3) {
+    height: 12px
+}
+
+.tw-meter i:nth-child(4) {
+    height: 15px
+}
+
+.tw-meter i.on {
+    background: var(--tw-sunrise-deep)
+}
+
+.tw-pcard__stub {
+    height: var(--stub);
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 10px;
+    padding: 0 18px;
+    border-top: 2px dashed #ddd7ec;
+    background: var(--tw-snow);
+    transition: background .4s
+}
+
+.tw-pcard__stub small {
+    display: block;
+    font-size: 10.5px;
+    font-weight: 700;
+    color: #8a84a0;
+    transition: color .4s
+}
+
+.tw-pcard__stub s {
+    font-size: 12px;
+    color: #a39dba;
+    margin-right: 6px;
+    transition: color .4s
+}
+
+.tw-pcard__stub strong {
+    font-family: var(--tw-font-display);
+    font-size: 22px;
+    font-weight: 800;
+    color: var(--tw-ink);
+    transition: color .4s
+}
+
+.tw-pcard__stub .tw-pcard__ask {
     font-size: 16px
 }
 
-.tw-pcard__go {
-    flex: none;
-    width: 38px;
-    height: 38px;
-    border-radius: 50%;
-    display: grid;
-    place-items: center;
-    background: var(--tw-snow);
+.tw-pcard__stub em {
+    font-style: normal;
+    font-weight: 800;
+    font-size: 13px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
     color: var(--tw-brand);
-    transition: .35s
+    transition: color .4s
 }
 
-.tw-pcard:hover .tw-pcard__go {
-    background: linear-gradient(180deg, var(--tw-sunrise), var(--tw-sunrise-deep));
-    color: #3a1c06;
-    transform: rotate(-45deg)
+.tw-pcard__stub em i {
+    transition: transform .4s
+}
+
+
+/* hover: ticket lifts and tilts, stub lights up, numeral fills amber */
+
+.tw-pcard:hover .tw-pcard__ticket {
+    transform: translateY(-8px) rotate(-.6deg)
+}
+
+.tw-pcard:hover .tw-pcard__ph {
+    transform: scale(1.06)
+}
+
+.tw-pcard:hover .tw-pcard__num {
+    color: var(--tw-sunrise);
+    -webkit-text-stroke-color: var(--tw-sunrise);
+    transform: translateY(-2px)
+}
+
+.tw-pcard:hover .tw-pcard__num small {
+    color: var(--tw-sunrise);
+    letter-spacing: .3em
+}
+
+.tw-pcard:hover .tw-pcard__stub {
+    background: linear-gradient(180deg, var(--tw-sunrise), var(--tw-sunrise-deep))
+}
+
+.tw-pcard:hover .tw-pcard__stub strong,
+.tw-pcard:hover .tw-pcard__stub em {
+    color: #3a1c06
+}
+
+.tw-pcard:hover .tw-pcard__stub small,
+.tw-pcard:hover .tw-pcard__stub s {
+    color: #6b3a10
+}
+
+.tw-pcard:hover .tw-pcard__stub em i {
+    transform: translateX(4px)
 }
 
 
 /* "view all" tile */
 
 .tw-pmore {
+    filter: none;
     color: #fff;
-    background: rgba(255, 255, 255, .05);
-    border: 1.5px dashed rgba(185, 166, 245, .45);
-    box-shadow: none;
+    background: transparent;
+    border: 1.5px dashed rgba(185, 166, 245, .5);
+    border-radius: 18px;
     align-items: center;
     justify-content: center;
     text-align: center;
     padding: 28px;
-    gap: 14px
+    gap: 12px;
+    transition: background .4s, border-color .4s
 }
 
-.tw-pmore::after {
-    display: none
+.tw-pmore .tw-pcard__num {
+    position: static;
+    text-align: center;
+    filter: none
 }
 
-.tw-pmore:hover {
-    background: rgba(255, 255, 255, .1);
-    border-color: var(--tw-sunrise);
-    box-shadow: none
+.tw-pmore .tw-pcard__num small {
+    color: var(--tw-ice)
 }
 
 .tw-pmore b {
     font-family: var(--tw-font-display);
-    font-size: clamp(20px, 1.6vw, 26px);
+    font-size: clamp(19px, 1.5vw, 24px);
     line-height: 1.15
 }
 
-.tw-pmore em {
-    font-style: normal;
-    color: var(--tw-ice);
-    font-size: 14px
-}
-
-.tw-pmore span {
-    width: 54px;
-    height: 54px;
+.tw-pmore__go {
+    width: 50px;
+    height: 50px;
     border-radius: 50%;
     display: grid;
     place-items: center;
     background: linear-gradient(180deg, var(--tw-sunrise), var(--tw-sunrise-deep));
     color: #3a1c06;
-    font-size: 18px;
-    transition: .35s
+    transition: transform .35s
 }
 
-.tw-pmore:hover span {
+.tw-pmore:hover {
+    border-color: var(--tw-sunrise);
+    background: rgba(255, 255, 255, .06)
+}
+
+.tw-pmore:hover .tw-pmore__go {
     transform: translateX(6px)
 }
 
@@ -3905,7 +3997,7 @@ p.tw-trips__eyebrow {
     .tw-pcard {
         scroll-snap-align: start
     }
-    .tw-pcard:hover {
+    .tw-pcard:hover .tw-pcard__ticket {
         transform: none
     }
     .tw-pbar {
