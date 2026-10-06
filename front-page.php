@@ -126,4 +126,10 @@ get_template_part( 'parts/hero' );
 <!-- ABOUT -->
 <?php trekways_about_section(); ?>
 
+<!-- REVIEWS -->
+<?php trekways_reviews_section(); ?>
+
+<!-- PLAN YOUR TREK -->
+<?php trekways_plan_section(); ?>
+
 <?php get_template_part( 'parts/footer' );

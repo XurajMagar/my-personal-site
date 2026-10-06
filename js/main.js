@@ -343,4 +343,319 @@
             abIo.observe(abSec);
         }
     }
+    /* 11. Reviews: read more, slider arrows, one-time intro */
+    var rvSec = document.getElementById('tw-rev');
+    if (rvSec) {
+        var rvList = document.getElementById('tw-rev-list');
+        var rvPrev = document.getElementById('tw-rev-prev');
+        var rvNext = document.getElementById('tw-rev-next');
+
+        /* show "Read more" only where the text is actually cut off */
+        var rvMore = function() {
+            Array.prototype.forEach.call(rvSec.querySelectorAll('.tw-pc'), function(card) {
+                var t = card.querySelector('.tw-pc__text');
+                var b = card.querySelector('.tw-pc__more');
+                if (!t || !b || card.classList.contains('open')) { return; }
+                b.hidden = t.scrollHeight <= t.clientHeight + 2;
+            });
+        };
+        rvSec.addEventListener('click', function(e) {
+            var b = e.target.closest('.tw-pc__more');
+            if (!b) { return; }
+            var card = b.closest('.tw-pc');
+            var open = card.classList.toggle('open');
+            b.textContent = open ? (b.getAttribute('data-less') || 'Show less') : (b.getAttribute('data-more') || 'Read more');
+            b.setAttribute('aria-expanded', open ? 'true' : 'false');
+        });
+
+        if (rvList && rvPrev && rvNext) {
+            var rvUpdate = function() {
+                var max = rvList.scrollWidth - rvList.clientWidth;
+                rvPrev.disabled = rvList.scrollLeft <= 2;
+                rvNext.disabled = rvList.scrollLeft >= max - 2;
+            };
+            var rvStep = function() {
+                var c = rvList.querySelector('.tw-pc');
+                return c ? c.offsetWidth + (parseFloat(getComputedStyle(rvList).columnGap) || 0) : rvList.clientWidth * 0.8;
+            };
+            rvPrev.addEventListener('click', function() { rvList.scrollBy({ left: -rvStep() }); });
+            rvNext.addEventListener('click', function() { rvList.scrollBy({ left: rvStep() }); });
+            rvList.addEventListener('scroll', rvUpdate, { passive: true });
+            window.addEventListener('resize', function() {
+                rvUpdate();
+                rvMore();
+            });
+            window.addEventListener('load', function() {
+                rvUpdate();
+                rvMore();
+            });
+            rvUpdate();
+        }
+        rvMore();
+
+        var rvReduce = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+        if (!rvReduce && 'IntersectionObserver' in window) {
+            rvSec.classList.add('io');
+            var rvIo = new IntersectionObserver(function(es) {
+                es.forEach(function(e) {
+                    if (e.isIntersecting) {
+                        rvSec.classList.add('in');
+                        rvIo.disconnect();
+                    }
+                });
+            }, { threshold: 0.25 });
+            rvIo.observe(rvSec);
+        }
+    }
+    /* 12. Plan your trek: region row, calendar, departures filter, booking popup, intro */
+    var ctSec = document.getElementById('tw-cta');
+    if (ctSec) {
+        var fd = document.getElementById('tw-fd');
+        var bk = document.getElementById('tw-bk');
+        var ctReduce = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+        /* ---- departures ---- */
+        if (fd) {
+            var T = {};
+            try { T = JSON.parse(fd.getAttribute('data-i18n') || '{}'); } catch (err) { T = {}; }
+            var fmt = function(s, a, b) { return String(s || '').replace('%1$s', a).replace('%2$s', b).replace('%s', a).replace('%d', a); };
+            var lang = document.documentElement.lang || 'en';
+            var tp = (fd.getAttribute('data-today') || '').split('-');
+            var today = tp.length === 3 ? new Date(+tp[0], +tp[1] - 1, +tp[2]) : new Date();
+            var list = document.getElementById('tw-fd-list');
+            var rows = Array.prototype.slice.call(list.querySelectorAll('.tw-dep'));
+            var empty = list.querySelector('.tw-fd__empty');
+            var tabs = document.getElementById('tw-fd-tabs');
+            var grid = document.getElementById('tw-cal-grid');
+            var calTitle = document.getElementById('tw-cal-title');
+            var calPrev = document.getElementById('tw-cal-prev');
+            var calNext = document.getElementById('tw-cal-next');
+            var calClear = document.getElementById('tw-cal-clear');
+            var filterLine = document.getElementById('tw-fd-filter');
+            var countLine = document.getElementById('tw-fd-count');
+
+            var parse = function(s) { var p = s.split('-'); return new Date(+p[0], +p[1] - 1, +p[2]); };
+            var key = function(d) { return d.getFullYear() + '-' + ('0' + (d.getMonth() + 1)).slice(-2) + '-' + ('0' + d.getDate()).slice(-2); };
+            var monthName = new Intl.DateTimeFormat(lang, { month: 'long', year: 'numeric' });
+            var longDate = new Intl.DateTimeFormat(lang, { day: 'numeric', month: 'short', year: 'numeric' });
+            var dows = [];
+            for (var w = 0; w < 7; w++) { dows.push(new Intl.DateTimeFormat(lang, { weekday: 'short' }).format(new Date(2024, 0, 1 + w)).slice(0, 2)); }
+
+            var st = { r: 'all', day: null, month: null };
+            var inR = function(row) { return st.r === 'all' || row.getAttribute('data-r') === st.r; };
+            var regionName = function() {
+                if (!tabs || st.r === 'all') { return ''; }
+                var t = tabs.querySelector('[data-r="' + st.r + '"]');
+                return t ? t.textContent.replace(/\s*\(\d+\)\s*$/, '') : '';
+            };
+            var firstMonthFor = function() {
+                var r = rows.filter(inR)[0];
+                var d = r ? parse(r.getAttribute('data-date')) : today;
+                return new Date(d.getFullYear(), d.getMonth(), 1);
+            };
+            st.month = firstMonthFor();
+
+            /* list height: first four rows (two on phones), then scroll */
+            var fade = function() { list.classList.toggle('more', list.scrollHeight - list.scrollTop - list.clientHeight > 4); };
+            var fitList = function() {
+                var vis = rows.filter(function(r) { return !r.hidden; });
+                var n = window.matchMedia('(max-width: 600px)').matches ? 2 : 4;
+                if (vis.length > n) {
+                    var last = vis[n - 1];
+                    list.classList.remove('all');
+                    list.style.setProperty('--tw-fd-h', (last.offsetTop + last.offsetHeight - vis[0].offsetTop + 4) + 'px');
+                } else {
+                    list.classList.add('all');
+                }
+                fade();
+                return vis.length > n;
+            };
+            list.addEventListener('scroll', fade, { passive: true });
+
+            var drawList = function(animate) {
+                var shown = 0;
+                rows.forEach(function(r) {
+                    var on = inR(r) && (!st.day || r.getAttribute('data-date') === st.day);
+                    r.hidden = !on;
+                    if (on) { r.style.setProperty('--i', Math.min(shown, 8));
+                        shown++; }
+                });
+                if (empty) { empty.hidden = shown > 0; }
+                var rn = regionName();
+                var lead = st.day ? fmt(T.departing, '<b>' + longDate.format(parse(st.day)) + '</b>') : (T.next || '');
+                filterLine.innerHTML = lead + (rn ? ' ' + fmt(T['in'], '<b>' + rn.replace(/</g, '&lt;') + '</b>') : '');
+                list.scrollTop = 0;
+                var scrolls = fitList();
+                countLine.textContent = (shown === 1 ? (T.one || '') : fmt(T.many, shown)) + (scrolls ? ', ' + (T.scroll || '') : '');
+                if (animate && !ctReduce) { list.classList.remove('play');
+                    void list.offsetWidth;
+                    list.classList.add('play'); }
+            };
+
+            var drawCal = function() {
+                var m = st.month,
+                    y = m.getFullYear(),
+                    mo = m.getMonth();
+                calTitle.textContent = monthName.format(m);
+                var counts = {};
+                rows.forEach(function(r) { if (inR(r)) { var k = r.getAttribute('data-date');
+                        counts[k] = (counts[k] || 0) + 1; } });
+                var html = dows.map(function(d) { return '<span class="tw-cal__dow" aria-hidden="true">' + d + '</span>'; }).join('');
+                var lead = (new Date(y, mo, 1).getDay() + 6) % 7;
+                for (var i = 0; i < lead; i++) { html += '<span></span>'; }
+                var days = new Date(y, mo + 1, 0).getDate();
+                for (var d = 1; d <= days; d++) {
+                    var dt = new Date(y, mo, d),
+                        k = key(dt),
+                        n = counts[k] || 0;
+                    var cls = 'tw-cal__day' + (n ? ' has' : '') + (k === st.day ? ' sel' : '') + (k === key(today) ? ' today' : '');
+                    html += n ?
+                        '<button type="button" class="' + cls + '" data-d="' + k + '" aria-pressed="' + (k === st.day) + '" aria-label="' + longDate.format(dt) + ', ' + fmt(T.dayLabel, n) + '">' + d + '</button>' :
+                        '<span class="' + cls + '" aria-hidden="true">' + d + '</span>';
+                }
+                grid.innerHTML = html;
+                var firstM = new Date(today.getFullYear(), today.getMonth(), 1);
+                var lastRow = rows.filter(inR).slice(-1)[0];
+                var lastD = lastRow ? parse(lastRow.getAttribute('data-date')) : today;
+                calPrev.disabled = m <= firstM;
+                calNext.disabled = y > lastD.getFullYear() || (y === lastD.getFullYear() && mo >= lastD.getMonth());
+                calClear.hidden = !st.day;
+            };
+
+            var draw = function(animate) { drawCal();
+                drawList(animate); };
+
+            grid.addEventListener('click', function(e) {
+                var b = e.target.closest('button.tw-cal__day');
+                if (!b) { return; }
+                var k = b.getAttribute('data-d');
+                st.day = st.day === k ? null : k;
+                draw(true);
+            });
+            calPrev.addEventListener('click', function() { st.month = new Date(st.month.getFullYear(), st.month.getMonth() - 1, 1);
+                drawCal(); });
+            calNext.addEventListener('click', function() { st.month = new Date(st.month.getFullYear(), st.month.getMonth() + 1, 1);
+                drawCal(); });
+            calClear.addEventListener('click', function() { st.day = null;
+                draw(true); });
+
+            /* region row */
+            if (tabs) {
+                var rWrap = tabs.parentNode;
+                var rPrev = document.getElementById('tw-fd-rprev');
+                var rNext = document.getElementById('tw-fd-rnext');
+                var rUpdate = function() {
+                    var max = tabs.scrollWidth - tabs.clientWidth;
+                    var atStart = tabs.scrollLeft <= 2,
+                        atEnd = tabs.scrollLeft >= max - 2;
+                    rWrap.classList.toggle('fits', max <= 2);
+                    rWrap.classList.toggle('l', !atStart);
+                    rWrap.classList.toggle('r', !atEnd);
+                    rPrev.disabled = atStart;
+                    rNext.disabled = atEnd;
+                };
+                rPrev.addEventListener('click', function() { tabs.scrollBy({ left: -tabs.clientWidth * 0.7 }); });
+                rNext.addEventListener('click', function() { tabs.scrollBy({ left: tabs.clientWidth * 0.7 }); });
+                tabs.addEventListener('scroll', rUpdate, { passive: true });
+                window.addEventListener('resize', rUpdate);
+                rUpdate();
+
+                tabs.addEventListener('click', function(e) {
+                    var b = e.target.closest('.tw-fd__tab');
+                    if (!b) { return; }
+                    st.r = b.getAttribute('data-r');
+                    Array.prototype.forEach.call(tabs.children, function(t) { t.setAttribute('aria-selected', t === b ? 'true' : 'false'); });
+                    b.scrollIntoView({ block: 'nearest', inline: 'center', behavior: 'smooth' });
+                    if (st.day && !rows.some(function(r) { return inR(r) && r.getAttribute('data-date') === st.day; })) { st.day = null; }
+                    var m = st.month;
+                    var hasHere = rows.some(function(r) { if (!inR(r)) { return false; } var d = parse(r.getAttribute('data-date')); return d.getFullYear() === m.getFullYear() && d.getMonth() === m.getMonth(); });
+                    if (!hasHere) { st.month = firstMonthFor(); }
+                    draw(true);
+                });
+                tabs.addEventListener('keydown', function(e) {
+                    if (e.key !== 'ArrowRight' && e.key !== 'ArrowLeft') { return; }
+                    var all = Array.prototype.slice.call(tabs.children);
+                    var i = all.indexOf(document.activeElement);
+                    if (i < 0) { return; }
+                    e.preventDefault();
+                    var nx = all[Math.max(0, Math.min(all.length - 1, i + (e.key === 'ArrowRight' ? 1 : -1)))];
+                    nx.focus();
+                    nx.click();
+                });
+            }
+
+            window.addEventListener('resize', fitList);
+            draw(false);
+        }
+
+        /* ---- booking popup (posts to the existing trekways_booking handler) ---- */
+        if (bk && typeof bk.showModal === 'function') {
+            var f = bk.querySelector('form');
+            var bTitle = document.getElementById('tw-bk-title');
+            var bSub = document.getElementById('tw-bk-sub');
+            var bErr = document.getElementById('tw-bk-error');
+            var tripIn = f.elements.trip_name,
+                dateIn = f.elements.departure_date,
+                trav = f.elements.travellers;
+            var enquireTitle = bTitle.textContent;
+            var tripLbl = tripIn.closest('label').querySelector('span');
+            var dateLbl = dateIn.closest('label').querySelector('span');
+            var tripLblDef = tripLbl.textContent,
+                dateLblDef = dateLbl.textContent;
+            var lastBtn = null;
+
+            var openBk = function(btn) {
+                lastBtn = btn;
+                var dep = btn.getAttribute('data-tw-book') === 'departure';
+                f.elements.booking_type.value = dep ? 'departure' : 'custom';
+                f.elements.trip_id.value = dep ? btn.getAttribute('data-trip-id') : '';
+                tripIn.value = dep ? btn.getAttribute('data-trip') : '';
+                tripIn.readOnly = dep;
+                dateIn.value = dep ? btn.getAttribute('data-date') : '';
+                dateIn.readOnly = dep;
+                var max = dep ? btn.getAttribute('data-max') : '';
+                if (max) { trav.max = max; if (+trav.value > +max) { trav.value = max; } } else { trav.removeAttribute('max'); }
+                var T2 = {};
+                try { T2 = JSON.parse((document.getElementById('tw-fd') || bk).getAttribute('data-i18n') || '{}'); } catch (err) { T2 = {}; }
+                bTitle.textContent = dep && T2.book ? T2.book.replace('%1$s', btn.getAttribute('data-trip')).replace('%2$s', btn.getAttribute('data-date-label')) : enquireTitle;
+                bSub.textContent = '';
+                tripLbl.textContent = dep && T2.trek ? T2.trek : tripLblDef;
+                dateLbl.textContent = dep && T2.depdate ? T2.depdate : dateLblDef;
+                bk.showModal();
+                (f.elements.full_name.value ? f.elements.message : f.elements.full_name).focus();
+            };
+
+            document.addEventListener('click', function(e) {
+                var b = e.target.closest('[data-tw-book]');
+                if (b && ctSec.contains(b)) { e.preventDefault();
+                    openBk(b); return; }
+                if (e.target.closest('[data-tw-close]') || e.target === bk) { bk.close(); }
+            });
+            bk.addEventListener('close', function() { if (lastBtn) { lastBtn.focus(); } });
+
+            /* the handler sends people back with ?booking=error: reopen the form with a note */
+            if (/[?&]booking=error\b/.test(window.location.search)) {
+                bErr.hidden = false;
+                var opener = ctSec.querySelector('[data-tw-book="custom"]');
+                if (opener) { ctSec.scrollIntoView();
+                    openBk(opener); }
+            }
+        }
+
+        /* ---- intro ---- */
+        if (!ctReduce && 'IntersectionObserver' in window) {
+            ctSec.classList.add('io');
+            var ctIo = new IntersectionObserver(function(es) {
+                es.forEach(function(e) {
+                    if (e.isIntersecting) {
+                        ctSec.classList.add('in');
+                        var l = document.getElementById('tw-fd-list');
+                        if (l) { l.classList.add('play'); }
+                        ctIo.disconnect();
+                    }
+                });
+            }, { threshold: 0.15 });
+            ctIo.observe(ctSec);
+        }
+    }
 })();
